@@ -29,6 +29,8 @@ class Monitor(Campaign):
         self.open_lanes = set()
         self.details = []
         self.impacts = []
+        self.path = []
+        self.deaths = []
         self.reported = set()
         self.impact_times = {}
         self.second_impact = None
@@ -73,7 +75,15 @@ class Monitor(Campaign):
                         urgent=intent['urgent'], goal=self.pilot.strategy.last_goal[2], waypoint=waypoint,
                         lane_cover=bool(intent.get('lane_cover')), focus=self.pilot.combat.focus,
                         hp=round(me['hp']), energy=round(me['energy'])))
-            return move(obs,arena,waypoint,intent)
+            action = move(obs,arena,waypoint,intent)
+            if args.trace and self.second_at is not None and round(self.time*10)%5 == 0:
+                self.path.append(dict(t=round(self.time,2),pos=list(me['pos']),hp=round(me['hp']),
+                    outlasted=len(self.last_dead), energy=round(me['energy']), move=action['move'],
+                    zone_margin=round(obs['zone']['radius']-math.dist(me['pos'][:2],obs['zone']['center']),2),
+                    goal=self.pilot.strategy.last_goal[2], waypoint=waypoint, gear=bool(me['weapons'][1]),
+                    reported=sorted(self.reported), cover=bool(intent.get('lane_cover')),
+                    bearing=bool(intent.get('incoming_guns')), boost=action['boost']))
+            return action
         self.pilot.motion.act = measure
 
     def move_squad(self, *args):
@@ -108,6 +118,14 @@ class Monitor(Campaign):
             self.pressure_hits += 1
             self.post_damage += max(0,hp-self.me['hp'])
 
+    def step(self, action):
+        if not args.trace:
+            return super().step(action)
+        count = len(self.last_dead)
+        super().step(action)
+        if len(self.last_dead) != count:
+            self.deaths.append([round(self.time,2),len(self.last_dead),self.kills])
+
     def run(self):
         row=super().run()
         t=self.second_at
@@ -139,7 +157,7 @@ try:
         row=game.run()
         print(json.dumps(row),flush=True)
         if trace:
-            print(json.dumps(dict(seed=row['seed'],decisions=game.details,impacts=game.impacts)),file=trace,flush=True)
+            print(json.dumps(dict(seed=row['seed'],decisions=game.details,impacts=game.impacts,path=game.path,deaths=game.deaths)),file=trace,flush=True)
 finally:
     if trace:
         trace.close()
