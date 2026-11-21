@@ -51,3 +51,62 @@ class GeometryTests(unittest.TestCase):
         self.assertFalse(self.a.clear((58,35,15),(77,35,15)))
         self.assertTrue(self.a.can_move((58,35,.58),(77,35,.77)))
         self.assertAlmostEqual(self.a.surface(68,35,16),16)
+
+class BodyClearanceTests(unittest.TestCase):
+    """A short passage narrows to seven meters between two tall wings."""
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory()
+        v = Path(cls.tmp.name) / 'v2'
+        v.mkdir()
+        side = 121
+        world = dict(bounds=dict(minX=0, maxX=120, minY=0, maxY=120),
+                     terrain=dict(nx=side, ny=side, minX=0, minY=0, step=1),
+                     prisms=[dict(base=-1, top=80, ring=rectangle(48,20,72,54.5), holes=[]),
+                             dict(base=-1, top=80, ring=rectangle(48,61.5,72,96), holes=[]),
+                             dict(base=13, top=15, ring=rectangle(24,80,34,97), holes=[])])
+        (v/'world.json').write_text(json.dumps(world))
+        # A short 2:1 slope in the top-left corner, independent of the passage.
+        samples = array.array('h', (200*max(0,min(6,x-8)) if y>105 else 0
+                                    for y in range(side) for x in range(side)))
+        if sys.byteorder != 'little':
+            samples.byteswap()
+        (v/'terrain.i16').write_bytes(samples.tobytes())
+        cls.a = Arena(cls.tmp.name, {})
+        assert cls.a.handle, cls.a.error
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.a.close()
+        cls.tmp.cleanup()
+
+    def setUp(self):
+        self.a.set_body(2.5, 9)
+
+    def test_clearance_after_growing_at_bridge(self):
+        self.assertTrue(self.a.can_move((12,88,0),(43,88,0)))
+        self.a.set_body(4, 14.4)
+        self.assertFalse(self.a.walkable(29,88,0))
+        self.assertFalse(self.a.can_move((12,88,0),(43,88,0)))
+
+    def test_route_changes_with_body_size(self):
+        def passage_y():
+            x, y = 14., 58.
+            for _ in range(160):
+                nx, ny = self.a.waypoint((x,y,0),(105,58,0))
+                length = ((nx-x)**2 + (ny-y)**2)**.5
+                scale = min(1., 1.2/max(length, 1.e-7))
+                nx,ny = x+scale*(nx-x), y+scale*(ny-y)
+                self.assertTrue(self.a.can_move((x,y,0),(nx,ny,0)))
+                x,y = nx,ny
+                if x>=60:
+                    return y
+            self.fail('waypoint stalled before passage')
+        self.assertLess(abs(passage_y()-58), 2)
+        self.a.set_body(4.0, 14.4)
+        crossing = passage_y()
+        self.assertTrue(crossing <= 16 or crossing >= 100, crossing)
+
+    def test_uphill_gradient_and_downhill(self):
+        self.assertFalse(self.a.can_move((8,110,0),(14,110,12)))
+        self.assertTrue(self.a.can_move((14,110,12),(8,110,0)))

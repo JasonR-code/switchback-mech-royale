@@ -1,0 +1,772 @@
+[
+  {
+    "seed": 87037,
+    "case": 0,
+    "opponents": 2,
+    "zone_mode": 0,
+    "player_secondary": false,
+    "start": [
+      490.0608976727467,
+      228.42731981056903,
+      4.498173069817599
+    ],
+    "enemy_starts": [
+      [
+        519.2065515723677,
+        88.33332927186197,
+        3.6159780634179484
+      ],
+      [
+        491.78862684312566,
+        100.87355335727682,
+        3.937323140120301
+      ]
+    ],
+    "survived": false,
+    "survival_s": 15.4,
+    "elapsed_s": 15.4,
+    "kills": 0,
+    "enemy_zone_deaths": 0,
+    "dealt": 1170.0,
+    "incoming": 1402.5,
+    "zone_damage": 0.0,
+    "hp": 0,
+    "crossfire_s": 0.95,
+    "crossfire_fraction": 0.0617,
+    "spotted_s": 9.6
+  },
+  {
+    "seed": 89408,
+    "case": 1,
+    "opponents": 3,
+    "zone_mode": 1,
+    "player_secondary": true,
+    "start": [
+      390.6553513697006,
+      -31.189201263780717,
+      2.8050009599681807
+    ],
+    "enemy_starts": [
+      [
+        490.7124367885531,
+        -54.7308142345294,
+        2.244432510230825
+      ],
+      [
+        506.7980138843096,
+        -70.12538017689356,
+        2.5057257858543784
+      ],
+      [
+        512.7165114629529,
+        -120.70229018499207,
+        2.612642282860635
+      ]
+    ],
+    "survived": false,
+    "survival_s": 21.6,
+    "elapsed_s": 21.6,
+    "kills": 0,
+    "enemy_zone_deaths": 0,
+    "dealt": 1725.0,
+    "incoming": 1560.0,
+    "zone_damage": 0.0,
+    "hp": 0,
+    "crossfire_s": 1.75,
+    "crossfire_fraction": 0.081,
+    "spotted_s": 14.6
+  },
+  {
+    "seed": 91779,
+    "case": 2,
+    "opponents": 2,
+    "zone_mode": 2,
+    "player_secondary": true,
+    "start": [
+      -378.3250962601224,
+      -207.7214560985778,
+      -5.485087545581551
+    ],
+    "enemy_starts": [
+      [
+        -336.8019927740826,
+        -302.16706504853033,
+        -5.538019927740826
+      ],
+      [
+        -277.4883115822702,
+        -292.6429030158652,
+        -5.3100000000000005
+      ]
+    ],
+    "survived": false,
+    "survival_s": 11.15,
+    "elapsed_s": 11.15,
+    "kills": 0,
+    "enemy_zone_deaths": 0,
+    "dealt": 1125.0,
+    "incoming": 1440.0,
+    "zone_damage": 0.0,
+    "hp": 0,
+    "crossfire_s": 11.15,
+    "crossfire_fraction": 1.0,
+    "spotted_s": 11.15
+  },
+  {
+    "seed": 94150,
+    "case": 3,
+    "opponents": 3,
+    "zone_mode": 0,
+    "player_secondary": false,
+    "start": [
+      483.66170685173074,
+      -175.71782966058456,
+      2.4698512055519224
+    ],
+    "enemy_starts": [
+      [
+        461.4285033304311,
+        -29.83760036379269,
+        2.8955678769359747
+      ],
+      [
+        549.3608030395267,
+        -69.53252651412892,
+        2.9425413259318227
+      ],
+      [
+        521.373698755872,
+        -63.25083445247985,
+        2.627798631022342
+      ]
+    ],
+    "survived": true,
+    "survival_s": 28.0,
+    "elapsed_s": 28.0,
+    "kills": 0,
+    "enemy_zone_deaths": 0,
+    "dealt": 1035.0,
+    "incoming": 1305.0,
+    "zone_damage": 0.0,
+    "hp": 626.0,
+    "crossfire_s": 8.7,
+    "crossfire_fraction": 0.3107,
+    "spotted_s": 27.55
+  },
+  {
+    "seed": 96521,
+    "case": 4,
+    "opponents": 2,
+    "zone_mode": 1,
+    "player_secondary": false,
+    "start": [
+      -321.96598020685246,
+      190.27381235242603,
+      0.8843941247752207
+    ],
+    "enemy_starts": [
+      [
+        -359.3322052230361,
+        95.21022805034022,
+        20.415227891597105
+      ],
+      [
+        -334.53068551766586,
+        65.86219900357479,
+        0.8180365173913168
+      ]
+    ],
+    "survived": false,
+    "survival_s": 8.85,
+    "elapsed_s": 8.85,
+    "kills": 0,
+    "enemy_zone_deaths": 0,
+    "dealt": 900.0,
+    "incoming": 1455.0,
+    "zone_damage": 0.0,
+    "hp": 0,
+    "crossfire_s": 8.85,
+    "crossfire_fraction": 1.0,
+    "spotted_s": 8.85
+  },
+  {
+    "seed": 98892,
+    "case": 5,
+    "opponents": 3,
+    "zone_mode": 2,
+    "player_secondary": true,
+    "start": [
+      335.40812936285624,
+      -210.40670732017048,
+      2.91222966045883
+    ],
+    "enemy_starts": [
+      [
+        263.6505545564446,
+        -113.2147931585334,
+        4.148273680912884
+      ],
+      [
+        237.85560422295035,
+        -224.95145848378445,
+        2.0431192464402055
+      ],
+      [
+        235.55306718623143,
+        -125.75744304017692,
+        4.826232927449068
+      ]
+    ],
+    "survived": false,
+    "survival_s": 11.35,
+    "elapsed_s": 11.35,
+    "kills": 0,
+    "enemy_zone_deaths": 0,
+    "dealt": 1419.0,
+    "incoming": 1260.0,
+    "zone_damage": 140.0,
+    "hp": 0,
+    "crossfire_s": 9.25,
+    "crossfire_fraction": 0.815,
+    "spotted_s": 11.3
+  },
+  {
+    "seed": 101263,
+    "case": 6,
+    "opponents": 2,
+    "zone_mode": 0,
+    "player_secondary": true,
+    "start": [
+      -297.13181565955665,
+      -127.44417647385228,
+      -5.308681843404433
+    ],
+    "enemy_starts": [
+      [
+        -358.23669023829564,
+        -0.855357884675314,
+        -4.778553578846753
+      ],
+      [
+        -322.3877711095256,
+        -17.069777368262464,
+        -4.504852286280593
+      ]
+    ],
+    "survived": false,
+    "survival_s": 11.25,
+    "elapsed_s": 11.25,
+    "kills": 0,
+    "enemy_zone_deaths": 0,
+    "dealt": 1170.0,
+    "incoming": 1440.0,
+    "zone_damage": 0.0,
+    "hp": 0,
+    "crossfire_s": 11.25,
+    "crossfire_fraction": 1.0,
+    "spotted_s": 11.25
+  },
+  {
+    "seed": 103634,
+    "case": 7,
+    "opponents": 3,
+    "zone_mode": 1,
+    "player_secondary": false,
+    "start": [
+      310.16007066567556,
+      26.401501251592947,
+      4.391156375765722
+    ],
+    "enemy_starts": [
+      [
+        241.55152233830358,
+        -113.94967328377055,
+        4.694988043779259
+      ],
+      [
+        323.9931674303266,
+        -108.85300898611379,
+        2.7716065615323298
+      ],
+      [
+        287.1438751938709,
+        -79.27184549676696,
+        3.3633564074517084
+      ]
+    ],
+    "survived": false,
+    "survival_s": 13.15,
+    "elapsed_s": 13.15,
+    "kills": 0,
+    "enemy_zone_deaths": 0,
+    "dealt": 1125.0,
+    "incoming": 1425.0,
+    "zone_damage": 0.0,
+    "hp": 0,
+    "crossfire_s": 1.65,
+    "crossfire_fraction": 0.1255,
+    "spotted_s": 8.05
+  },
+  {
+    "seed": 106005,
+    "case": 8,
+    "opponents": 2,
+    "zone_mode": 2,
+    "player_secondary": false,
+    "start": [
+      252.78886827048063,
+      -217.51889374730217,
+      2.466257800895414
+    ],
+    "enemy_starts": [
+      [
+        145.30470346109252,
+        -238.70519330772123,
+        0.9495551445845751
+      ],
+      [
+        193.08334422948286,
+        -101.51488928099931,
+        5.490297785619987
+      ]
+    ],
+    "survived": false,
+    "survival_s": 7.65,
+    "elapsed_s": 7.65,
+    "kills": 0,
+    "enemy_zone_deaths": 0,
+    "dealt": 900.0,
+    "incoming": 1417.5,
+    "zone_damage": 0.0,
+    "hp": 0,
+    "crossfire_s": 7.65,
+    "crossfire_fraction": 1.0,
+    "spotted_s": 7.65
+  },
+  {
+    "seed": 108376,
+    "case": 9,
+    "opponents": 3,
+    "zone_mode": 0,
+    "player_secondary": true,
+    "start": [
+      414.4731680589956,
+      -196.34203332883072,
+      2.1492337675213222
+    ],
+    "enemy_starts": [
+      [
+        435.8831451327377,
+        -300.73851812149917,
+        -1.1944648081279463
+      ],
+      [
+        419.75782358618403,
+        -324.7341007689778,
+        -1.8679849529118318
+      ],
+      [
+        422.629549821019,
+        -310.5761963228717,
+        -1.482026837974936
+      ]
+    ],
+    "survived": false,
+    "survival_s": 16.2,
+    "elapsed_s": 16.2,
+    "kills": 0,
+    "enemy_zone_deaths": 0,
+    "dealt": 1314.0,
+    "incoming": 1440.0,
+    "zone_damage": 0.0,
+    "hp": 0,
+    "crossfire_s": 4.05,
+    "crossfire_fraction": 0.25,
+    "spotted_s": 7.45
+  },
+  {
+    "seed": 110747,
+    "case": 10,
+    "opponents": 2,
+    "zone_mode": 1,
+    "player_secondary": true,
+    "start": [
+      -367.2084139090315,
+      -278.1367102288007,
+      -5.599954035434609
+    ],
+    "enemy_starts": [
+      [
+        -284.0252585641861,
+        -148.70400137504691,
+        -5.389747414358139
+      ],
+      [
+        -281.3634710003128,
+        -171.7687931384508,
+        -5.381471698723027
+      ]
+    ],
+    "survived": false,
+    "survival_s": 16.85,
+    "elapsed_s": 16.85,
+    "kills": 0,
+    "enemy_zone_deaths": 0,
+    "dealt": 1260.0,
+    "incoming": 1470.0,
+    "zone_damage": 0.0,
+    "hp": 0,
+    "crossfire_s": 6.85,
+    "crossfire_fraction": 0.4065,
+    "spotted_s": 16.85
+  },
+  {
+    "seed": 113118,
+    "case": 11,
+    "opponents": 3,
+    "zone_mode": 2,
+    "player_secondary": false,
+    "start": [
+      -369.2139341440035,
+      161.67169417337618,
+      45.44688009981535
+    ],
+    "enemy_starts": [
+      [
+        -497.00641650304055,
+        197.8424146011553,
+        -6.398552476072364
+      ],
+      [
+        -456.13154320462826,
+        226.41706510433573,
+        -5.8873249715061835
+      ],
+      [
+        -423.4589192669564,
+        262.8203109389925,
+        -5.408690167692507
+      ]
+    ],
+    "survived": false,
+    "survival_s": 13.8,
+    "elapsed_s": 13.8,
+    "kills": 0,
+    "enemy_zone_deaths": 0,
+    "dealt": 765.0,
+    "incoming": 1410.0,
+    "zone_damage": 0.0,
+    "hp": 0,
+    "crossfire_s": 4.0,
+    "crossfire_fraction": 0.2899,
+    "spotted_s": 13.8
+  },
+  {
+    "seed": 115489,
+    "case": 12,
+    "opponents": 2,
+    "zone_mode": 0,
+    "player_secondary": false,
+    "start": [
+      434.7042059372051,
+      -106.02281756543223,
+      1.6068138837177284
+    ],
+    "enemy_starts": [
+      [
+        392.63832792123975,
+        -209.14387333197385,
+        2.6879329207468174
+      ],
+      [
+        425.23910836018587,
+        -211.89253879904658,
+        2.712874802767437
+      ]
+    ],
+    "survived": false,
+    "survival_s": 8.05,
+    "elapsed_s": 8.05,
+    "kills": 0,
+    "enemy_zone_deaths": 0,
+    "dealt": 1035.0,
+    "incoming": 1440.0,
+    "zone_damage": 0.0,
+    "hp": 0,
+    "crossfire_s": 8.05,
+    "crossfire_fraction": 1.0,
+    "spotted_s": 8.05
+  },
+  {
+    "seed": 117860,
+    "case": 13,
+    "opponents": 3,
+    "zone_mode": 1,
+    "player_secondary": true,
+    "start": [
+      249.54670494917298,
+      -20.01725298627332,
+      4.9634263216620775
+    ],
+    "enemy_starts": [
+      [
+        371.44738836002216,
+        -58.36868289957618,
+        2.793678574808033
+      ],
+      [
+        321.1865616529444,
+        -86.69007713757169,
+        2.9362687669411116
+      ],
+      [
+        375.81266390377067,
+        -117.11311814443259,
+        2.04053026840206
+      ]
+    ],
+    "survived": false,
+    "survival_s": 8.25,
+    "elapsed_s": 8.25,
+    "kills": 0,
+    "enemy_zone_deaths": 0,
+    "dealt": 990.0,
+    "incoming": 1440.0,
+    "zone_damage": 0.0,
+    "hp": 0,
+    "crossfire_s": 8.25,
+    "crossfire_fraction": 1.0,
+    "spotted_s": 8.25
+  },
+  {
+    "seed": 120231,
+    "case": 14,
+    "opponents": 2,
+    "zone_mode": 2,
+    "player_secondary": true,
+    "start": [
+      264.69085440260244,
+      -60.720773499428134,
+      3.937345319349493
+    ],
+    "enemy_starts": [
+      [
+        350.0203306209519,
+        -122.0929419240271,
+        2.348848378879931
+      ],
+      [
+        384.33062549842896,
+        -84.05672821056987,
+        2.146126462910012
+      ]
+    ],
+    "survived": false,
+    "survival_s": 8.35,
+    "elapsed_s": 8.35,
+    "kills": 0,
+    "enemy_zone_deaths": 0,
+    "dealt": 945.0,
+    "incoming": 1440.0,
+    "zone_damage": 0.0,
+    "hp": 0,
+    "crossfire_s": 8.35,
+    "crossfire_fraction": 1.0,
+    "spotted_s": 8.35
+  },
+  {
+    "seed": 122602,
+    "case": 15,
+    "opponents": 3,
+    "zone_mode": 0,
+    "player_secondary": false,
+    "start": [
+      -210.38474125024067,
+      67.95178708378876,
+      16.44657214559226
+    ],
+    "enemy_starts": [
+      [
+        -251.89839425110694,
+        197.73144776380562,
+        -7.533187222244728
+      ],
+      [
+        -275.4507012914052,
+        207.83156586906983,
+        -6.519285861127776
+      ],
+      [
+        -190.94375107134323,
+        197.04554037513236,
+        25.966206751966812
+      ]
+    ],
+    "survived": false,
+    "survival_s": 6.15,
+    "elapsed_s": 6.15,
+    "kills": 0,
+    "enemy_zone_deaths": 0,
+    "dealt": 630.0,
+    "incoming": 1440.0,
+    "zone_damage": 0.0,
+    "hp": 0,
+    "crossfire_s": 6.15,
+    "crossfire_fraction": 1.0,
+    "spotted_s": 6.15
+  },
+  {
+    "seed": 124973,
+    "case": 16,
+    "opponents": 2,
+    "zone_mode": 1,
+    "player_secondary": false,
+    "start": [
+      -173.51218552417544,
+      59.436242861984,
+      -4.997599938514594
+    ],
+    "enemy_starts": [
+      [
+        -179.52078907974604,
+        -37.557567976683785,
+        -4.971199352159219
+      ],
+      [
+        -203.4036088376988,
+        -45.92769875123774,
+        -4.849939227668097
+      ]
+    ],
+    "survived": true,
+    "survival_s": 28.0,
+    "elapsed_s": 28.0,
+    "kills": 0,
+    "enemy_zone_deaths": 0,
+    "dealt": 495.0,
+    "incoming": 990.0,
+    "zone_damage": 0.0,
+    "hp": 1186.2,
+    "crossfire_s": 3.8,
+    "crossfire_fraction": 0.1357,
+    "spotted_s": 5.6
+  },
+  {
+    "seed": 127344,
+    "case": 17,
+    "opponents": 3,
+    "zone_mode": 2,
+    "player_secondary": true,
+    "start": [
+      -127.54063698429712,
+      107.59958313939836,
+      -5.117174754496008
+    ],
+    "enemy_starts": [
+      [
+        -123.61090640474235,
+        225.4416889230916,
+        -5.145583110769085
+      ],
+      [
+        -179.2773943549605,
+        254.2300085755071,
+        -5.107374115059748
+      ],
+      [
+        -133.19365094816058,
+        267.3496857412499,
+        -5.033761574795107
+      ]
+    ],
+    "survived": false,
+    "survival_s": 8.25,
+    "elapsed_s": 8.25,
+    "kills": 0,
+    "enemy_zone_deaths": 0,
+    "dealt": 990.0,
+    "incoming": 1440.0,
+    "zone_damage": 0.0,
+    "hp": 0,
+    "crossfire_s": 8.25,
+    "crossfire_fraction": 1.0,
+    "spotted_s": 8.25
+  },
+  {
+    "seed": 129715,
+    "case": 18,
+    "opponents": 2,
+    "zone_mode": 0,
+    "player_secondary": true,
+    "start": [
+      -412.0470839524153,
+      -222.3267278319966,
+      -1.5954611714494706
+    ],
+    "enemy_starts": [
+      [
+        -486.96450294185325,
+        -324.0866174419155,
+        -5.258622621743158
+      ],
+      [
+        -467.6083017684159,
+        -323.7735182948519,
+        -5.511750946947522
+      ]
+    ],
+    "survived": true,
+    "survival_s": 28.0,
+    "elapsed_s": 28.0,
+    "kills": 0,
+    "enemy_zone_deaths": 0,
+    "dealt": 1485.0,
+    "incoming": 405.0,
+    "zone_damage": 0.0,
+    "hp": 1040.0,
+    "crossfire_s": 1.1,
+    "crossfire_fraction": 0.0393,
+    "spotted_s": 5.1
+  },
+  {
+    "seed": 132086,
+    "case": 19,
+    "opponents": 3,
+    "zone_mode": 1,
+    "player_secondary": false,
+    "start": [
+      -452.49434111705654,
+      154.96707368995033,
+      -2.617778546937151
+    ],
+    "enemy_starts": [
+      [
+        -484.37215588967797,
+        256.82225015683633,
+        -6.459566022315535
+      ],
+      [
+        -404.10117552483194,
+        295.27910326116046,
+        -5.6382207226367145
+      ],
+      [
+        -349.3673005253152,
+        246.26076696707418,
+        -5.154499705971885
+      ]
+    ],
+    "survived": false,
+    "survival_s": 8.25,
+    "elapsed_s": 8.25,
+    "kills": 0,
+    "enemy_zone_deaths": 0,
+    "dealt": 1035.0,
+    "incoming": 1440.0,
+    "zone_damage": 0.0,
+    "hp": 0,
+    "crossfire_s": 8.25,
+    "crossfire_fraction": 1.0,
+    "spotted_s": 8.25
+  }
+]

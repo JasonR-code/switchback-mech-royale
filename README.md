@@ -34,6 +34,6 @@ Practice points depend on how many mechs die before the player. The 15 house mec
 
 ## Evidence and remaining uncertainty
 
-Read validation/RESULTS.md for measured replay timing, controlled experiments, held-out results, and limitations. Raw per-scenario results and checker output are in validation/results. No official practice run has been submitted. The included starter kit is the supplied public competition material.
+Read validation/RESULTS.md for measured replay timing, controlled experiments, held-out results, and limitations. Raw per-scenario results and checker output are in validation/results. The submitted baseline at eecc4f9 earned 4.27/15 in official practice. This retreat candidate awaits its first official score. See validation/RETREAT.md for the paired pursuit results. The included starter kit is the supplied public competition material.
 
 [Official track](https://www.joinbuilders.org/buildathon/tracks/builders)

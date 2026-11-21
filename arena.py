@@ -19,6 +19,7 @@ def _library():
         "free": (None, [V]),
         "prism": (None, [V, D, D, DP, IP, I]),
         "build": (None, [V]),
+        "body": (None, [V, D, D]),
         "ground": (D, [V, D, D]),
         "surface": (D, [V, D, D, D]),
         "fits": (I, [V, D, D, D]),
@@ -40,6 +41,7 @@ class Arena:
         self.bounds = (-512.38, -333.09, 555.08, 388.64)
         mech = (config or {}).get("mech", {})
         self.radius = float(mech.get("radius", 2.5))
+        self.height = float(mech.get("height", 9))
         self.error = None
         try:
             self.lib = _library()
@@ -76,6 +78,15 @@ class Arena:
 
     def __del__(self):
         self.close()
+
+    def set_body(self, radius, height):
+        if radius == self.radius and height == self.height:
+            return
+        if radius <= 0 or height <= 0 or not (math.isfinite(radius) and math.isfinite(height)):
+            return
+        self.radius, self.height = radius, height
+        if self.handle:
+            self.lib.ar_body(self.handle, radius, height)
 
     def ground(self, x, y):
         return self.lib.ar_ground(self.handle, x, y) if self.handle else 0.0

@@ -112,6 +112,64 @@ class StrategyTests(unittest.TestCase):
         self.assertTrue(p["escape"])
         self.assertFalse(self.arena.clear(p["goal"],self.obs["mechs"][0]["pos"]))
 
+    def check_open_retreat(self, range_x):
+        # Seed 20 stalled at 100 m and moved toward both enemies at 150 m.
+        for side in (-1, 1):
+            with self.subTest(side=side):
+                self.obs["mechs"] = [enemy(3, side*range_x, 20), enemy(4, side*range_x, -20)]
+                plan = Strategy({}, 20).plan(self.obs, self.arena)
+                pos, goal = self.obs["self"]["pos"], plan["goal"]
+                self.assertGreater(distance(pos, goal), 4)
+                for mech in self.obs["mechs"]:
+                    self.assertGreater(distance(goal, mech["pos"]), distance(pos, mech["pos"]))
+                self.assertTrue(plan["escape"])
+                self.assertFalse(plan["hold"])
+
+    def test_two_aimed_guns_100m(self):
+        self.check_open_retreat(100)
+
+    def test_two_aimed_guns_150m(self):
+        self.check_open_retreat(150)
+
+    def test_opposite_and_flanking_pursuers(self):
+        for positions in [[(100,0),(-100,0)], [(100,0),(0,100),(60,85)]]:
+            with self.subTest(positions=positions):
+                self.obs["mechs"] = [enemy(i+3,*pos) for i,pos in enumerate(positions)]
+                plan = Strategy({},20).plan(self.obs,self.arena)
+                self.assertTrue(plan["escape"])
+                for pos in positions:
+                    self.assertGreater(distance(plan["goal"],pos), distance([0,0],pos))
+
+    def test_passable_endpoint_across_blocked_segment(self):
+        class LowBarrier(Plane):
+            # Both endpoints can be walkable across a low wall that doesn't block shots.
+            def can_move(self, a, b):
+                if (a[0] < -3) == (b[0] < -3):
+                    return True
+                y = a[1] + (b[1]-a[1]) * (-3-a[0]) / (b[0]-a[0])
+                return y >= 0
+
+        self.obs["mechs"] = [enemy(3,100,20), enemy(4,100,-20)]
+        barrier = LowBarrier()
+        pos = self.obs["self"]["pos"]
+        original = Strategy({},20).plan(self.obs, self.arena)["goal"]
+        self.assertFalse(barrier.can_move(pos, original))
+        plan = Strategy({},20).plan(self.obs, barrier)
+        self.assertTrue(plan["direct_escape"])
+        self.assertTrue(barrier.can_move(pos, plan["goal"]))
+        for mech in self.obs["mechs"]:
+            self.assertGreater(distance(plan["goal"], mech["pos"]), distance(pos,mech["pos"]))
+
+    def test_squad_at_final_ring_does_not_pull_mech_out(self):
+        self.obs["self"]["pos"] = [-17,0,0]
+        self.obs["zone"].update(radius=18,next_center=[0,0],next_radius=8,
+                                shrink_start=0,shrink_end=14,dps=160)
+        self.obs["mechs"] = [enemy(3,40,4), enemy(4,40,-4)]
+        plan = self.plan()
+        self.assertTrue(plan["urgent"])
+        self.assertTrue(plan["escape"])
+        self.assertLess(distance(plan["goal"], [0,0]), 17)
+
     def test_single_contact_focus_group_fallback(self):
         self.obs["mechs"]=[enemy(3,40,0,184)]
         p=self.plan()

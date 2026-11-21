@@ -380,6 +380,56 @@ class Strategy:
             winner = ("fallback", (nc[0], nc[1], arena.ground(*nc)), "anchor", None, 0)
         return winner
 
+    def _withdraw(self, obs, arena, contacts, urgent):
+        """Pick an immediately traversable leg that cuts firing angles."""
+        me, zone, t = obs["self"], obs["zone"], obs["t"]
+        pos = me["pos"]
+        sources = [(w, ep, h, los) for w, ep, h, los, enemy in contacts if enemy]
+        if not any(s[3] for s in sources):
+            return None
+        walk = max(2., me["stats"].get("walk_speed", 11.7))
+        body = me["stats"].get("height", 9.) * .58
+        aim = atan2(pos[1]-sources[0][1][1],pos[0]-sources[0][1][0])
+        best = None
+        best_score = -float("inf")
+        # A few longer spokes find walls beyond the local steering horizon.
+        # Score the transit too: cover behind an enemy can be fatal to reach.
+        for j in range(16):
+            a = aim + j*pi/8
+            dx, dy = cos(a), sin(a)
+            risk_sum = 0.
+            last_r = 0.
+            for r in (7., 16., 29., 46., 65.):
+                x,y = pos[0]+r*dx,pos[1]+r*dy
+                z = arena.surface(x,y,pos[2]) if hasattr(arena,"surface") else arena.ground(x,y)
+                dest = (x,y,z)
+                if (not arena.walkable(x,y,z) or abs(z-pos[2])>10 or
+                    (hasattr(arena,"can_move") and not arena.can_move(pos,dest))):
+                    break
+                exposure = separation = dodge = 0.
+                for w, ep, h, los in sources:
+                    near = max(1.,distance(pos,ep))
+                    after = distance(dest,ep)
+                    visible = arena.clear(above(ep,h),above(dest,body))
+                    exposure += w * visible * (1 + .6*clip((55-after)/35))
+                    separation += w * clip(after-near,-45,55)
+                    dodge += w * abs(dx*(pos[1]-ep[1])-dy*(pos[0]-ep[0])) / near
+                risk_sum += exposure * (r-last_r)
+                last_r = r
+                score = -78*exposure - .31*risk_sum - .15*r
+                score += .39*separation + 11*dodge*min(1,r/18)
+                c,rad = future_circle(zone,t, 4 + 1.2*r/walk)
+                excess = max(0,distance(dest,c)-max(0,rad-min(9.,.18*rad)))
+                score -= (2.4+zone.get("dps",20)/55)*excess
+                if urgent:
+                    if excess > 0 and distance(dest,c) >= distance(pos,c):
+                        continue
+                    score -= .5*max(0,distance(dest,zone["next_center"])-zone["next_radius"]+4)
+                if score>best_score:
+                    best_score=score
+                    best=("withdraw",dest,"withdraw",None,0)
+        return best
+
     def plan(self, obs, arena):
         me, t = obs["self"], obs["t"]
         p, zone = me["pos"], obs["zone"]
@@ -392,6 +442,8 @@ class Strategy:
         escape = bool((pressure > .82 and (len(visible)>1 or hp<.65)) or
                       (hp < .50 and pressure > .26) or
                       (len(visible)>1 and hp < .7 and pressure > .55))
+        aimed = sum(c[0] > .26 for c in visible)
+        escape = escape or aimed >= 2
         recover = hp < .85 and not visible
         speed = max(2, me["stats"].get("walk_speed",11.7))
         center, radius = future_circle(zone,t,8)
@@ -415,6 +467,23 @@ class Strategy:
         if t >= self.next_plan or flags != self.last_flags or invalid or not self.last_goal:
             self.last_goal = self._select(obs, arena, contacts, pressure, values, slots,
                                           urgent, escape, recover, center, radius)
+            # Keep an existing route into shelter, including routes around corners.
+            # Redirect exposed anchors that leave the mech in the squad's firing lanes.
+            if escape and len(visible) >= 2 and not (zone["radius"] < 20 and urgent):
+                endpoint = self.last_goal[1]
+                torso = above(endpoint, me["stats"].get("height",9)*.58)
+                dangerous = [src for src in visible if arena.clear(above(src[1],src[2]),torso)]
+                route = self._withdraw(obs, arena, contacts, urgent)
+                if route:
+                    dest = route[1]
+                    torso = above(dest, me["stats"].get("height",9)*.58)
+                    lanes_there = sum(arena.clear(above(e[1],e[2]),torso) for e in visible)
+                    local_cover = lanes_there < len(dangerous)
+                    stalls = (len(dangerous) >= 2 and self.last_goal[2] == "anchor" and
+                              min(distance(endpoint,c[1]) for c in dangerous) <
+                              min(distance(p,c[1]) for c in dangerous) + 4)
+                    if local_cover or (stalls and not urgent):
+                        self.last_goal = route
             self.next_plan = t + (.47 if contacts or urgent else .83)
             self.last_flags = flags
         _, goal, category, focus, ring = self.last_goal
@@ -435,4 +504,4 @@ class Strategy:
         return {"goal":goal, "pressure":pressure, "focus":focus, "escape":escape, "scan":atan2(sin(scan),cos(scan)),
                 "urgent":urgent, "recover":recover, "hold":category == "capture" or (category=="anchor" and not visible and distance(p,goal)<4),
                 "capture_radius":ring, "threats":[(ep[0],ep[1],weight) for weight,ep,_,_,_ in contacts],
-                "actions":actions}
+                "direct_escape":category=="withdraw", "actions":actions}

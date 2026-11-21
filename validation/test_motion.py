@@ -1,12 +1,14 @@
 """Component scenarios for short-horizon movement. Run with python3 -m unittest discover."""
 import math
+import random
+import statistics
 from pathlib import Path
 import sys
 import unittest
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-sys.path.insert(0, str(HERE.parent / 'bot'))
+sys.path.insert(0, str(HERE.parent))
 from motion import Motion
 
 
@@ -76,7 +78,98 @@ def gun_evasion(use_controller):
     return contacts
 
 
+class LaneExit(Floor):
+    """Approximate the end of a firing lane. No building collision is modeled."""
+
+    def __init__(self, length):
+        self.length = length
+
+    def clear(self, start, end):
+        return end[0] < self.length or end[1] < -4
+
+
+def retreat_trial(motion_type, seed, count):
+    """A 20 Hz straight-ground physics probe with several scripted arm guns.
+
+    Shots use exact observed pursuit velocities and a random lead fraction
+    per shooter. They have independent firing phases and spread. Projectile
+    observations within 200 m omit sensor occlusion. The trial ends at the
+    lane exit or at 15 s. Hits to the front deal 45 damage in this probe.
+    """
+    rng = random.Random(seed)
+    rng.uniform(45, 78)  # Keep the recorded case sequence stable.
+    obs = make_obs()
+    controller = motion_type({}, seed + 57)
+    arena = LaneExit(rng.uniform(40, 100))
+    me = obs['self']
+    me['pos'][1] = rng.uniform(-6, 6)
+    goal = (arena.length + 4, 0., 0.)
+    width = .27 if seed % 2 else 1.15
+    bearings = [rng.uniform(-width, width) for _ in range(count)]
+    shooters = []
+    for bearing in bearings:
+        d = rng.uniform(52, 100)
+        shooters.append([-d * math.cos(bearing), -d * math.sin(bearing), 0.])
+    leads = [rng.choice((0., .4, .75, 1.)) for _ in shooters]
+    noises = [random.Random(seed + 197*i) for i in range(count)]
+    phases = [rng.randint(0, 4) for _ in shooters]
+    shots = []
+    hits = 0
+    last_boost = -10.
+    reached = False
+    for k in range(300):
+        px, py = me['pos'][:2]
+        vx, vy = me['vel'][:2]
+        obs['mechs'] = []
+        for i, where in enumerate(shooters):
+            dx, dy = px - where[0], py - where[1]
+            t = math.hypot(dx, dy) / 252 * leads[i]
+            yaw = math.atan2(dy + t*vy, dx + t*vx)
+            obs['mechs'].append(dict(kind='mech', pos=where, aim=[yaw, 0], weapons=['gun']))
+            magazine_tick = (k + phases[i]) % 106
+            if magazine_tick < 60 and magazine_tick % 5 == 0 and arena.clear(where, me['pos']):
+                bearing = yaw + noises[i].gauss(0, math.radians(.6))
+                shots.append({'kind':'gun', 'pos':where[:2] + [4.5], 'age':0.,
+                              'vel':[252*math.cos(bearing), 252*math.sin(bearing), 0.]})
+        obs['projectiles'] = [p for p in shots if math.dist(p['pos'], me['pos']) < 200]
+        if k % 2 == 0:
+            action = controller.act(obs, arena, goal[:2], {'goal':goal, 'escape':True, 'pressure':1.})
+        advance(obs, action)
+        if action['boost']:
+            me['energy'] = max(0, me['energy'] - .05*17)
+            last_boost = obs['t']
+        elif obs['t'] - last_boost > .6:
+            me['energy'] = min(100, me['energy'] + .05*18)
+        for p in shots[:]:
+            rx, ry = p['pos'][0]-px, p['pos'][1]-py
+            p['pos'][0] += .05 * p['vel'][0]
+            p['pos'][1] += .05 * p['vel'][1]
+            p['age'] += .05
+            dx, dy = p['pos'][0]-me['pos'][0]-rx, p['pos'][1]-me['pos'][1]-ry
+            fraction = max(0., min(1., -(rx*dx+ry*dy)/max(1e-9, dx*dx+dy*dy)))
+            hit = math.hypot(rx+dx*fraction, ry+dy*fraction) < 2.8
+            if hit or p['age'] > .92:
+                hits += hit
+                shots.remove(p)
+        if not arena.clear(shooters[0], me['pos']):
+            reached = True
+            break
+    return reached and hits*45 < 1400, hits, (k+1)*.05
+
+
+def retreat_summary(motion_type, start, count, shooters):
+    rows = [retreat_trial(motion_type, seed, shooters) for seed in range(start, start+count)]
+    return dict(arrived_alive=sum(r[0] for r in rows), cases=count,
+                mean_contacts=round(statistics.mean(r[1] for r in rows), 2),
+                mean_seconds=round(statistics.mean(r[2] for r in rows), 2))
+
+
 class MotionTests(unittest.TestCase):
+    def test_reaching_lane_exit_under_three_shooters(self):
+        result = retreat_summary(Motion, 14110, 12, 3)
+        self.assertEqual(result['arrived_alive'], result['cases'])
+        self.assertLess(result['mean_seconds'], 7.8)
+
     def test_stuck_approach_recovers_without_leaving_capture_ring(self):
         obs = make_obs()
         m = Motion({}, 3)
@@ -167,6 +260,24 @@ class MotionTests(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    if len(sys.argv) > 1 and sys.argv[1] == '--retreat':
+        import argparse
+        import importlib.util
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--retreat', action='store_true')
+        parser.add_argument('--motion-file', type=Path)
+        parser.add_argument('--first', type=int, default=14110)
+        parser.add_argument('--cases', type=int, default=64)
+        parser.add_argument('--shooters', type=int, default=3)
+        args = parser.parse_args()
+        policy = Motion
+        if args.motion_file:
+            spec = importlib.util.spec_from_file_location('motion_under_test', args.motion_file)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            policy = mod.Motion
+        print(retreat_summary(policy, args.first, args.cases, args.shooters))
+        sys.exit(0)
     print('Synthetic projectile contacts over 48 bearings / lead times (goal-only, predictive):',
           gun_evasion(False), gun_evasion(True))
     unittest.main()

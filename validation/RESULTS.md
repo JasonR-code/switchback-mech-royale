@@ -1,6 +1,6 @@
-# Validation and experiments
+# Baseline validation and experiments
 
-Official competition score is unmeasured. The scorer ranks entries by mean 16 minus placement. The public track describes 48 private practice matches against a cooperative squad, with new-seed free-for-alls in qualifying and the final. The local evaluations exercise particular decisions. They contain neither the squad policy nor a full competitive match.
+The user reported an official practice score of 4.27/15 for baseline eecc4f9 after the following local measurements. The updated candidate results are in RETREAT.md. The scorer ranks entries by mean 16 minus placement. The public track describes 48 private practice matches against a cooperative squad, with new-seed free-for-alls in qualifying and the final. The local evaluations exercise particular decisions. They contain neither the squad policy nor a full competitive match.
 
 ## Official replay
 

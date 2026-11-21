@@ -12,6 +12,9 @@
 
 namespace {
 constexpr double cell = 0.5, stride = 4.0, bin_size = 16.0;
+// Navigation stores clearance for progressively larger cylinders at hello. At a
+// new cube count selecting a tier costs no graph rebuild or per-edge collision tests.
+constexpr std::array<double,12> body_scales{1.,1.05,1.15,1.25,1.4,1.55,1.75,2.,2.5,3.,4.,8.};
 constexpr float infinity = std::numeric_limits<float>::infinity();
 struct Point { double x,y; };
 struct Prism {
@@ -19,10 +22,11 @@ struct Prism {
     std::vector<std::vector<Point>> rings;
 };
 struct Slab { int next, id; };
-struct Link { int to; float cost; bool climb; };
+struct Link { int to; float cost; bool climb; unsigned char clearance=0; };
 struct Node {
     int x,y; float z, shelter=0;
     std::vector<Link> links;
+    unsigned char clearance=0;
 };
 double squared(double x,double y) { return x*x+y*y; }
 double cross(Point a,Point b,Point c) {
@@ -47,6 +51,8 @@ bool inside(Point a,const Prism& p) {
 }
 struct Map {
     double l,b,r,t,ox,oy,step,rad,height,ledge,maxgrad;
+    double base_radius,base_height;
+    unsigned active_tier=0;
     int nx,ny,cx,cy,gx,gy,bx,by;
     std::vector<int16_t> terrain;
     std::vector<Prism> polys;
@@ -65,6 +71,7 @@ struct Map {
     Map(const double* a,const int16_t* terrain_data,int width,int h)
       :l(a[0]),b(a[1]),r(a[2]),t(a[3]),ox(a[4]),oy(a[5]),step(a[6]),
        rad(a[7]),height(a[8]),ledge(a[9]),maxgrad(std::tan(a[10]*0.01745329252)),nx(width),ny(h) {
+        base_radius=rad; base_height=height;
         terrain.assign(terrain_data,terrain_data+nx*ny);
         cx=int(std::ceil((r-l)/cell))+1;cy=int(std::ceil((t-b)/cell))+1;
         gx=int(std::ceil((r-l)/stride));gy=int(std::ceil((t-b)/stride));
@@ -106,6 +113,26 @@ struct Map {
         for(int i=0;i<8;i++)
             if(!free_column(x+radius*dx[i],y+radius*dy[i],z)) return false;
         return true;
+    }
+    unsigned clearance(double x,double y,double z,unsigned maximum) {
+        // Search the monotone clearance of a complete cylinder. For normal
+        // cube counts the largest rounding step is three cubes.
+        unsigned lo=0,hi=maximum;
+        while(lo<hi){
+            unsigned mid=(lo+hi+1)/2;
+            height=base_height*body_scales[mid];
+            if(fits(x,y,z,base_radius*body_scales[mid]+.23)) lo=mid;
+            else hi=mid-1;
+        }
+        height=base_height;
+        return lo;
+    }
+    void set_body(double radius,double h){
+        rad=radius; height=h;
+        double scale=std::max(rad/base_radius,height/base_height);
+        auto pos=std::lower_bound(body_scales.begin(),body_scales.end(),scale-1e-5);
+        unsigned tier=std::min(size_t(pos-body_scales.begin()),body_scales.size()-1);
+        if(tier!=active_tier){active_tier=tier;route.clear();last_climb=-1e6;}
     }
     void index_prism(int id) {
         const Prism& p=polys[id];
@@ -173,12 +200,15 @@ struct Map {
     bool move(double x,double y,double z,double u,double v,double radius) const {
         double len=std::hypot(u-x,v-y);
         int n=std::max(1,int(std::ceil(len/.48)));
-        double step_length=len/n, feet=z;
+        double step_length=len/n, feet=z, old_ground=ground(x,y);
         // Descending past a lip temporarily keeps feet on the lip while the body
         // overhangs it. Once the complete cylinder clears it, use the lower support.
         for(int i=1;i<=n;i++) {
             double s=double(i)/n,a=x+(u-x)*s,b_=y+(v-y)*s;
-            double floor=surface(a,b_,feet);
+            double floor=surface(a,b_,feet), terrain_z=ground(a,b_);
+            if(floor<=terrain_z+.03 && feet<=old_ground+.12 &&
+               terrain_z-old_ground>step_length*maxgrad+.016) return false;
+            old_ground=terrain_z;
             if(floor-feet>std::max(ledge,step_length*maxgrad)+.03) return false;
             if(!fits(a,b_,floor,radius)) {
                 if(floor<feet-.05 && fits(a,b_,feet,radius)) continue;
@@ -263,6 +293,23 @@ struct Map {
             }
             n.shelter=std::min(1.f,walls/5.f) * (n.links.size()<3?.4f:1.f);
         }
+        for(auto& n:nodes)
+            n.clearance=clearance(wx(n.x),wy(n.y),n.z,body_scales.size()-1);
+        for(auto& n:nodes){
+            double x=wx(n.x), y=wy(n.y);
+            for(auto& edge:n.links){
+                const auto& target=nodes[edge.to];
+                unsigned cap=std::min(n.clearance,target.clearance);
+                double u=wx(target.x),v=wy(target.y), feet=edge.climb?target.z:n.z;
+                for(double f: {.25,.5,.75}){
+                    if(!cap)break;
+                    double a=x+(u-x)*f,b_=y+(v-y)*f;
+                    if(!edge.climb) feet=surface(a,b_,feet);
+                    cap=clearance(a,b_,feet,cap);
+                }
+                edge.clearance=cap;
+            }
+        }
         costs.resize(nodes.size());parent.resize(nodes.size());
     }
     int nearest(double x,double y,double z,bool start) const {
@@ -273,6 +320,7 @@ struct Map {
                 for(int u=std::max(0,i-ring);u<=std::min(gx-1,i+ring);u++){
                     if(std::max(std::abs(u-i),std::abs(v-j))!=ring) continue;
                     for(int id:sites[v*gx+u]){
+                        if(nodes[id].clearance<active_tier) continue;
                         double dz=nodes[id].z-z;
                         double s=squared(wx(u)-x,wy(v)-y)+dz*dz*(dz>ledge && start?14.:1.75);
                         if(s<score && (!start || ring<1 || move(x,y,z,wx(u),wy(v),rad))) {score=s;best=id;}
@@ -307,6 +355,7 @@ struct Map {
             if(h(id)<h(best))best=id;
             expanded++;
             for(auto& edge:nodes[id].links){
+                if(edge.clearance<active_tier) continue;
                 auto& n=nodes[edge.to];double x=wx(n.x),y=wy(n.y),risk=0;
                 for(int k=0;k<nt;k++){
                     double d2=squared(x-threats[3*k],y-threats[3*k+1]);
@@ -402,6 +451,7 @@ void ar_prism(Map* m,double lo,double hi,const double* xy,const int* sizes,int c
     if(!p.rings.empty())m->polys.push_back(std::move(p));
 }
 void ar_build(Map* m){m->build();}
+void ar_body(Map* m,double radius,double height){m->set_body(radius,height);}
 double ar_ground(Map* m,double x,double y){return m->ground(x,y);}
 double ar_surface(Map* m,double x,double y,double z){return m->surface(x,y,z);}
 int ar_fits(Map* m,double x,double y,double z){return m->fits(x,y,m->surface(x,y,z),m->rad);}

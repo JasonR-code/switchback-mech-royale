@@ -42,6 +42,18 @@ class PilotTests(unittest.TestCase):
         self.assertTrue(self.pilot.arena.handle, self.pilot.arena.error)
         self.assertGreater(self.pilot.arena.bounds[2], 500)
 
+    def test_two_guns_produce_outward_movement_actions(self):
+        from test_strategy import enemy, observed
+        hello = self.hello | {"seed":20,"map":{"dir":"/unmapped-flat-arena"}}
+        for offset in (100,150):
+            obs = observed()
+            obs["mechs"] = [enemy(3,offset,20), enemy(4,offset,-20)]
+            action = Pilot(hello).act(obs)
+            self.assertEqual(self.schema.errors(action, "Action"), [])
+            for mech in obs["mechs"]:
+                toward = mech["pos"][:2]
+                self.assertLess(sum(a*b for a,b in zip(action["move"], toward)), 0)
+
     def test_partial_observations(self):
         self.check_action({'tick': 4432})
         self.check_action({'tick': 4434,'self': {'pos':[None,0,0]}})

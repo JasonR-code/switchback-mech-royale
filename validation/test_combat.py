@@ -93,6 +93,43 @@ def aiming_ablation(n=256):
     return out
 
 
+def squad_decisions(controller=Combat):
+    """Small independent decisions with all geometry and expected outcomes specified."""
+    rng = random.Random(80317)
+    score = dict(arc_on_mech=0, concealed_hold=0, laser_against_arc=0)
+    n = 48
+    for _ in range(n):
+        bearing = rng.uniform(-math.pi,math.pi)
+        offset = math.radians(rng.uniform(8,25))*rng.choice((-1,1))
+        foe_range, crate_range = rng.uniform(32,42), rng.uniform(6,15)
+        obs = observation('lightning')
+        foe = obs['mechs'][0]
+        foe.update(pos=[foe_range*math.cos(bearing),foe_range*math.sin(bearing),0],
+                   weapons=['laser'],charging=True,hp=400)
+        obs['crates'] = [dict(id=1001,hp=300,pos=[crate_range*math.cos(bearing+offset),
+                                                   crate_range*math.sin(bearing+offset),0])]
+        a = settle(controller(CFG),obs,focus=1,pressure=.7)
+        # Directly resolve which object the engine's nearest-in-cone rule selects.
+        cone = math.radians(CFG['weapons']['lightning']['cone_deg'])
+        if a['fire'][0]:
+            inside = [(math.dist((0,0,7),(*o['pos'][:2],z)),o['id']) for o,z in ((foe,4.5),(obs['crates'][0],1.2))
+                      if abs(wrap(math.atan2(o['pos'][1],o['pos'][0])-a['aim'][0])) <= cone]
+            score['arc_on_mech'] += int(bool(inside) and min(inside)[1]==1)
+
+        r = rng.uniform(75,116)
+        obs = observation('mortar',distance=r)
+        obs['self']['hp'] = 550
+        wall = Slab(r*.5,rng.uniform(7.1,9.2))
+        a = settle(controller(CFG),obs,arena=wall,recover=True)
+        score['concealed_hold'] += int(not a['fire'][0])
+
+        obs = observation('gun','laser',distance=rng.uniform(24,41))
+        obs['mechs'][0]['weapons'] = ['lightning']
+        a = settle(controller(CFG),obs)
+        score['laser_against_arc'] += int(a['fire'][1])
+    return n, score
+
+
 class CombatTests(unittest.TestCase):
     def setUp(self):
         self.bot = Combat(CFG)
@@ -174,6 +211,44 @@ class CombatTests(unittest.TestCase):
         self.assertAlmostEqual(a['aim'][0],math.atan2(15,50),places=3)
         self.assertLess(a['aim'][1],0)
 
+    def test_squad_decisions(self):
+        count, scores = squad_decisions()
+        self.assertEqual(scores['arc_on_mech'],count)
+        self.assertEqual(scores['concealed_hold'],count)
+        self.assertEqual(scores['laser_against_arc'],0)
+
+    def test_arc_blocker_same_bearing_and_beyond_range(self):
+        obs=observation('lightning',distance=38,hp=50)
+        obs['crates']=[dict(id=1010,pos=[18,0,0],hp=300)]
+        # A nearer non-chainable crate necessarily receives the arc. During
+        # recovery stop spending energy on it, even when the mech is weak.
+        self.assertFalse(settle(self.bot,obs,recover=True)['fire'][0])
+        obs['crates'][0]['pos']=[48,0,0]
+        self.assertTrue(settle(self.bot,obs,recover=True)['fire'][0])
+
+    def test_laser_short_releases_held_charge(self):
+        obs=observation('gun','laser',distance=36)
+        obs['self']['weapons'][1]['charge']=.25
+        obs['mechs'][0]['weapons']=['lightning']
+        self.assertFalse(settle(self.bot,obs)['fire'][1])
+        obs['self']['weapons'][1]['charge']=0
+        obs['mechs'][0]['aim']=[0,0]
+        # A carrier facing away cannot immediately short a charge.
+        self.assertTrue(settle(self.bot,obs)['fire'][1])
+
+    def test_direct_shot_beyond_occluded_foreground(self):
+        obs=observation('gun')
+        obs['mechs']=[dict(id=i,kind='mech',pos=[12+i,i*.16,0],hp=550,aim=[math.pi,0]) for i in range(1,11)]
+        obs['mechs'].append(dict(id=11,kind='mech',pos=[-70,10,0],hp=1200,aim=[0,0]))
+        a=settle(self.bot,obs,arena=Slab(6,90))
+        self.assertGreater(a['aim'][0],2.8)
+        self.assertTrue(a['fire'][0])
+
+    def test_concealed_finish_is_available(self):
+        obs=observation('gun','mortar',distance=85,hp=90)
+        obs['self']['hp']=550
+        self.assertTrue(settle(self.bot,obs,recover=True,arena=Slab(42,8.5))['fire'][1])
+
     def test_common_random_shots(self):
         results = aiming_ablation()
         for baseline,leading,count in results.values():
@@ -183,4 +258,5 @@ class CombatTests(unittest.TestCase):
 
 if __name__=='__main__':
     print('synthetic hits [stationary aim, velocity lead, eligible pairs]',aiming_ablation())
+    print('squad decision fixtures',squad_decisions())
     unittest.main()

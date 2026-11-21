@@ -111,6 +111,31 @@ def arc_clear(arena, origin, solution, speed, gravity, barrel):
     return True
 
 
+def lightning_windows(yaw, distance, cone, obstacles):
+    """Yaw offsets that place this target first in the lightning cone.
+
+    Keep a small margin on both sides for engine tick ordering and movement.
+    Subtract each nearer body's cone in target-relative angles to handle +/-pi.
+    """
+    margin = min(.036, cone*.1)
+    windows = [(-cone+margin, cone-margin)]
+    for d, other_yaw, _, _, _ in obstacles:
+        if d >= distance-.02:
+            break
+        center = wrap(other_yaw-yaw)
+        left, right = center-cone-margin, center+cone+margin
+        remaining = []
+        for a,b in windows:
+            if a < left:
+                remaining.append((a, min(left,b)))
+            if b > right:
+                remaining.append((max(right,a), b))
+        windows = remaining
+        if not windows:
+            break
+    return [(wrap(yaw + .5*(a+b)), (b-a)*.5) for a,b in windows if b-a > .012]
+
+
 @dataclass(slots=True)
 class Contact:
     obj: dict
@@ -143,6 +168,7 @@ class Combat:
         self.step = 1 / max(1, match.get('tick_hz', 20))
         self.interval = self.step * match.get('decide_every', 2)
         self.previous = {}
+        self.incoming = {}
         self.focus = None
 
     def contacts(self, obs, intent, origin):
@@ -152,8 +178,11 @@ class Combat:
         recover = intent.get('recover', False)
         retreat = intent.get('escape', False)
         health_ratio = me.get('hp', 1400) / max(1., me.get('max_hp', 1400))
-        attackers = {e.get('by') for e in obs.get('events', ()) if e.get('type') == 'damaged'}
         now = obs.get('t', 0.)
+        for event in obs.get('events', ()):
+            if event.get('type') == 'damaged' and event.get('by') is not None:
+                self.incoming[event['by']] = now
+        attackers = {attacker for attacker,t in self.incoming.items() if now-t < 1.8}
         contacts = []
         for group in ('mechs', 'crates'):
             for obj in obs.get(group, ()):
@@ -243,6 +272,42 @@ class Combat:
         inventory = list((me.get('weapons') or [])[:2])
         inventory += [None] * (2-len(inventory))
         contacts = self.contacts(obs, intent, muzzle)
+        now = obs.get('t', 0.)
+        protected = intent.get('recover') or intent.get('cease_fire') or (
+            intent.get('escape') and me.get('hp', 1400) < .7*me.get('max_hp',1400))
+        lightning = next((w for w in inventory if w and w.get('kind') == 'lightning'), None)
+        obstacles = []
+        if lightning:
+            lightning_range = (lightning.get('stats') or {}).get('range', self.weapons.get('lightning', {}).get('range',45))
+            # Even a crate we deliberately avoid farming can intercept the first arc.
+            for group in ('mechs', 'crates'):
+                for obj in obs.get(group, ()):
+                    p = obj.get('pos')
+                    if not p or hypot(p[0]-muzzle[0],p[1]-muzzle[1]) > lightning_range+2:
+                        continue
+                    kind = obj.get('kind', 'crate')
+                    if kind == 'mech':
+                        h = self.base.get('height', 9)*(1 + self.cfg.get('cubes',{}).get('size_per_cube',.05)*obj.get('cubes',0))
+                    else:
+                        h = self.cfg.get('npc' if kind=='npc' else 'crates', {}).get('height', 3.5 if kind=='npc' else 2.4)
+                    point = (p[0],p[1],p[2]+.51*h)
+                    d = dist(point,muzzle)
+                    if d <= lightning_range and arena.clear(muzzle,point):
+                        obstacles.append((d, atan2(p[1]-muzzle[1],p[0]-muzzle[0]), obj['id'], kind, point))
+            obstacles.sort()
+        arc_risk = False
+        if any(w and w.get('kind') == 'laser' for w in inventory):
+            arc_stats = self.weapons.get('lightning', {})
+            for target in contacts:
+                if target.kind != 'mech' or 'lightning' not in (target.obj.get('weapons') or []):
+                    continue
+                if target.distance > arc_stats.get('range',45)+2:
+                    continue
+                bearing = atan2(muzzle[1]-target.center[1],muzzle[0]-target.center[0])
+                facing = (target.obj.get('aim') or ZERO)[0]
+                if abs(wrap(facing-bearing)) < radians(arc_stats.get('cone_deg',30))+ .36 and arena.clear(target.center,muzzle):
+                    arc_risk = True
+                    break
         shots = []
         stats_by_slot = []
         for slot, w in enumerate(inventory):
@@ -257,8 +322,17 @@ class Combat:
             if kind == 'lightning' and me.get('energy', 100) < stats.get('energy', 3):
                 continue
             charge = w.get('charge', 0)
-            for target in contacts[:(4 if kind == 'mortar' else 9)]:
+            count = 0
+            for target in contacts[:(8 if kind == 'mortar' else 27)]:
+                if count >= (4 if kind == 'mortar' else 9):
+                    break
                 c = target.center
+                if protected and kind == 'mortar' and not arena.clear(muzzle,c):
+                    # Firing from behind a wall resets outgoing-damage regen.
+                    # The health trade is worthwhile only to finish a weak mech.
+                    if target.kind != 'mech' or target.obj.get('hp', 1400) > stats.get('splash',160):
+                        continue
+                windows = None
                 # Aim half a physics tick ahead for discrete movement/fire ordering.
                 vx, vy, vz = target.velocity
                 origin = tube if kind == 'mortar' else muzzle
@@ -332,9 +406,18 @@ class Combat:
                         pitch = atan2(point[2]-origin[2], hypot(point[0]-origin[0], point[1]-origin[1]))
                         pitch_tolerance *= .34
                     if kind == 'lightning':
-                        yaw_tolerance = radians(stats.get('cone_deg', 30))*.84
+                        identity = target.obj.get('id')
+                        item = next((o for o in obstacles if o[2] == identity),None)
+                        if item is None:
+                            continue
+                        windows = lightning_windows(item[1],item[0],radians(stats.get('cone_deg',30)),obstacles)
+                        if not windows:
+                            continue
                         pitch_tolerance = pi
-                        value *= 1.45
+                        # Extra nearby enemy bodies can receive chain damage.
+                        nearby = sum(o[2]!=identity and o[3]=='mech' and dist(o[4],c) <= stats.get('chain_range',14)
+                                     for o in obstacles)
+                        value *= 1.45 + .16*min(nearby,stats.get('chain',2))
                         if 'laser' in (target.obj.get('weapons') or []):
                             value *= 1.24
                     elif kind == 'laser':
@@ -346,11 +429,11 @@ class Combat:
                         fraction_now = stats.get('min_frac', .35) + (1-stats.get('min_frac',.35))*frac
                         lethal = target.obj.get('hp', 1e5) <= damage*fraction_now*.93
                         mobile = intent.get('escape') or intent.get('urgent')
-                        if mobile and charge <= 0 and not lethal and target.distance > 48:
+                        if charge <= 0 and (arc_risk or (mobile and not lethal and target.distance > 48)):
                             continue
                         release = (charge >= max_charge-.005 or
                                    (charge >= stats.get('min_charge',.15) and
-                                    (lethal or mobile)))
+                                    (lethal or mobile or arc_risk)))
                         # During the charge the other slot can aim and fire.
                         value *= (3.8 if release else (.45 if charge < max_charge-.16 else 1.2))
                 if kind != 'lightning' and not (pitch_limits[0]-pitch_tolerance <= pitch <= pitch_limits[1]+pitch_tolerance):
@@ -359,7 +442,9 @@ class Combat:
                     value *= .12 if cooldown > .35 else .38
                 yaw_delay = abs(wrap(yaw-actual[0]))/max(.1,yaw_rate)
                 value /= 1 + .42*yaw_delay
-                shots.append(Shot(slot, target, yaw, clamp(pitch,*pitch_limits), yaw_tolerance, pitch_tolerance, value))
+                for center_yaw, tolerance in windows or [(yaw, yaw_tolerance)]:
+                    shots.append(Shot(slot, target, center_yaw, clamp(pitch,*pitch_limits), tolerance, pitch_tolerance, value))
+                count += 1
 
         # Compatible aim lets both triggers work (notably gun + lightning).
         # Count each slot once, even when several bodies overlap its cone.
@@ -405,7 +490,7 @@ class Combat:
                     if 'mortar' in (hit.obj.get('weapons') or []):
                         damage *= 1 + stats.get('cookoff',.6)
                     if charge >= max_charge-.005 or (charge >= stats.get('min_charge',.15)
-                            and (hit.obj.get('hp',1e5) <= .93*damage or intent.get('escape') or intent.get('urgent'))):
+                            and (hit.obj.get('hp',1e5) <= .93*damage or intent.get('escape') or intent.get('urgent') or arc_risk)):
                         fire[slot] = False
             elif kind in ('gun', 'mortar', 'lightning'):
                 fire[slot] = bool(aligned) and w.get('cooldown', 0) <= self.interval

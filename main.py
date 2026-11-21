@@ -148,8 +148,15 @@ class Pilot:
         if not isinstance(source.get("self"), dict) or not vector(source["self"].get("pos"), 3):
             return {"tick": tick}
         obs = self._observation(source)
+        me = obs["self"]
+        self.arena.set_body(me["stats"]["radius"], me["stats"]["height"])
         intent = self.strategy.plan(obs, self.arena)
-        waypoint = self.arena.waypoint(obs["self"]["pos"], intent["goal"], intent.get("threats", ()))
+        pos, goal = obs["self"]["pos"], intent["goal"]
+        if intent.get("direct_escape") and self.arena.can_move(pos, goal):
+            waypoint = goal[:2]
+            self.arena.climb_height = None
+        else:
+            waypoint = self.arena.waypoint(pos, goal, intent.get("threats", ()))
         travel = self.motion.act(obs, self.arena, waypoint, intent)
         attack = self.combat.act(obs, self.arena, intent)
         return {"tick": tick, **travel, **attack, **intent.get("actions", {})}

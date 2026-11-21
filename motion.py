@@ -217,6 +217,13 @@ class Motion:
         zr = zone.get('radius', 1e6)
         margin = zr - math.hypot(x-cx,y-cy)
         air_floor = arena.ground(x, y) - z if not grounded and lines else 0.
+        # Three pursuers in one firing lane should not triple the incentive
+        # to run sideways. Keep making headway to cover while dodging
+        # individual projectiles and preserving the reward for breaking LOS.
+        exposed_weights = [s[0] for s in shooters if s[5] and s[0] > .14]
+        squad_retreat = escape and len(exposed_weights) >= 2
+        strafe_scale = 1 / max(1., sum(exposed_weights)) if squad_retreat else 1.
+        range_weight = .62 if squad_retreat else .32
         orbit = contact and gd < 9 and wd < 9 and not (hold or capture or urgent)
         for mx, my in candidates:
             ux, uy = mx * speed, my * speed
@@ -250,10 +257,17 @@ class Motion:
             # jinking against remembered enemies separated from us by a wall.
             for n, (w, dist, nx, ny, muzzle, exposed) in enumerate(shooters):
                 lateral = ox * (-ny) + oy * nx
+                if exposed and squad_retreat:
+                    # A radial sprint gives an aimed gun an easy shot even at full speed.
+                    # Incoming gun fire matters most on exposed headings. A route crossing
+                    # into cover still earns its separate LOS bonus below.
+                    flight = min(.7, dist / max(1., self.config.get('weapons', {}).get('gun', {}).get('speed',252.)))
+                    projected_miss = abs(lateral) / HORIZON * flight
+                    score += 9 * strafe_scale * w * min(1., projected_miss / max(1., radius))
                 if exposed:
-                    score += w * (.47 * abs(lateral) + .23 * self.side * lateral)
+                    score += strafe_scale * w * (.47 * abs(lateral) + .23 * self.side * lateral)
                     if escape and dist < 95:
-                        score += w * .32 * (ox*nx + oy*ny)
+                        score += w * range_weight * (ox*nx + oy*ny)
                 if n < 2 and w > .1:
                     target_z = (future_z if grounded and abs(future_z-z)<4 else z) + height*.55
                     visible = arena.clear(muzzle, (ex,ey,target_z))
