@@ -107,7 +107,7 @@ class Motion:
             if weapon == 'gun' and t-when <= 1.2 and math.dist(pos[:2],hit_pos) <= 16:
                 directions.append((-math.sin(yaw),math.cos(yaw)))
                 missing |= ident not in reported
-        return tuple(directions) if missing or len(directions) >= 2 else ()
+        return tuple(directions) if missing else ()
 
     def _shooters(self, obs, arena, stats):
         x, y, z = obs['self']['pos']

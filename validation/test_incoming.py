@@ -40,7 +40,8 @@ class IncomingTests(unittest.TestCase):
         self.assertFalse(self.input(.3, []))
 
     def test_reported_two_guns_and_distinct_weapon_types(self):
-        self.assertEqual(len(self.input(0, [hit(1),hit(2)], [1,2])),2)
+        self.assertFalse(self.input(0, [hit(1),hit(2)], [1,2]))
+        self.assertEqual(len(self.input(.1, [], [1])),2)
         self.assertFalse(self.input(.1,[hit(2,.7,'lightning')],[1,2]))
         self.assertFalse(self.input(4.,[hit(7,0.,'npc'),hit(8,0.,'mortar')]))
         self.assertFalse(self.input(.1,[hit(0,None),hit(1,float('nan'))]))
