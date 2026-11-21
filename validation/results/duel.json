@@ -1,0 +1,530 @@
+[
+  {
+    "policy": "starter",
+    "seed": 80557,
+    "start": [
+      -444.0533861457899,
+      -85.80238611910139,
+      -3.5094462872812904
+    ],
+    "enemy_start": [
+      -359.2397054932658,
+      -101.30430357361472,
+      -4.445851870938175
+    ],
+    "eliminated": false,
+    "survived": false,
+    "time": 13.15,
+    "damage_dealt": 945.0,
+    "damage_taken": 1440.0,
+    "shots": 35,
+    "hits": 21,
+    "opponent_lead": 0.45
+  },
+  {
+    "policy": "pilot",
+    "seed": 80557,
+    "start": [
+      -444.0533861457899,
+      -85.80238611910139,
+      -3.5094462872812904
+    ],
+    "enemy_start": [
+      -359.2397054932658,
+      -101.30430357361472,
+      -4.445851870938175
+    ],
+    "eliminated": false,
+    "survived": true,
+    "time": 24.0,
+    "damage_dealt": 1305.0,
+    "damage_taken": 990.0,
+    "shots": 34,
+    "hits": 29,
+    "opponent_lead": 0.45
+  },
+  {
+    "policy": "starter",
+    "seed": 80670,
+    "start": [
+      -218.0513011119655,
+      -48.242030243049754,
+      -4.952544466636475
+    ],
+    "enemy_start": [
+      -191.50360446879,
+      19.013339149884956,
+      -5.049794519125351
+    ],
+    "eliminated": false,
+    "survived": false,
+    "time": 12.9,
+    "damage_dealt": 675.0,
+    "damage_taken": 1440.0,
+    "shots": 34,
+    "hits": 15,
+    "opponent_lead": 0.0
+  },
+  {
+    "policy": "pilot",
+    "seed": 80670,
+    "start": [
+      -218.0513011119655,
+      -48.242030243049754,
+      -4.952544466636475
+    ],
+    "enemy_start": [
+      -191.50360446879,
+      19.013339149884956,
+      -5.049794519125351
+    ],
+    "eliminated": true,
+    "survived": true,
+    "time": 13.15,
+    "damage_dealt": 1440.0,
+    "damage_taken": 765.0,
+    "shots": 35,
+    "hits": 32,
+    "opponent_lead": 0.0
+  },
+  {
+    "policy": "starter",
+    "seed": 80783,
+    "start": [
+      -422.48134674006997,
+      121.31214067823669,
+      -5.722558759944559
+    ],
+    "enemy_start": [
+      -498.84913429657666,
+      103.00424640724606,
+      -6.4100360577002995
+    ],
+    "eliminated": false,
+    "survived": false,
+    "time": 12.4,
+    "damage_dealt": 810.0,
+    "damage_taken": 1440.0,
+    "shots": 32,
+    "hits": 18,
+    "opponent_lead": 0.0
+  },
+  {
+    "policy": "pilot",
+    "seed": 80783,
+    "start": [
+      -422.48134674006997,
+      121.31214067823669,
+      -5.722558759944559
+    ],
+    "enemy_start": [
+      -498.84913429657666,
+      103.00424640724606,
+      -6.4100360577002995
+    ],
+    "eliminated": true,
+    "survived": true,
+    "time": 13.45,
+    "damage_dealt": 1440.0,
+    "damage_taken": 405.0,
+    "shots": 36,
+    "hits": 32,
+    "opponent_lead": 0.0
+  },
+  {
+    "policy": "starter",
+    "seed": 80896,
+    "start": [
+      -153.1228666630775,
+      295.68684442962666,
+      -4.653975458534949
+    ],
+    "enemy_start": [
+      -172.01932164280694,
+      350.8455910740059,
+      -4.680223050769213
+    ],
+    "eliminated": false,
+    "survived": false,
+    "time": 12.4,
+    "damage_dealt": 855.0,
+    "damage_taken": 1440.0,
+    "shots": 32,
+    "hits": 19,
+    "opponent_lead": 0.45
+  },
+  {
+    "policy": "pilot",
+    "seed": 80896,
+    "start": [
+      -153.1228666630775,
+      295.68684442962666,
+      -4.653975458534949
+    ],
+    "enemy_start": [
+      -172.01932164280694,
+      350.8455910740059,
+      -4.680223050769213
+    ],
+    "eliminated": true,
+    "survived": true,
+    "time": 22.65,
+    "damage_dealt": 1440.0,
+    "damage_taken": 1215.0,
+    "shots": 39,
+    "hits": 32,
+    "opponent_lead": 0.45
+  },
+  {
+    "policy": "starter",
+    "seed": 81009,
+    "start": [
+      -276.7782376225996,
+      38.246051624811514,
+      0.1556551561757152
+    ],
+    "enemy_start": [
+      -303.3407194179017,
+      99.79667452626948,
+      -9.23
+    ],
+    "eliminated": false,
+    "survived": false,
+    "time": 12.4,
+    "damage_dealt": 810.0,
+    "damage_taken": 1440.0,
+    "shots": 32,
+    "hits": 18,
+    "opponent_lead": 0.45
+  },
+  {
+    "policy": "pilot",
+    "seed": 81009,
+    "start": [
+      -276.7782376225996,
+      38.246051624811514,
+      0.1556551561757152
+    ],
+    "enemy_start": [
+      -303.3407194179017,
+      99.79667452626948,
+      -9.23
+    ],
+    "eliminated": true,
+    "survived": true,
+    "time": 13.0,
+    "damage_dealt": 1440.0,
+    "damage_taken": 1080.0,
+    "shots": 34,
+    "hits": 32,
+    "opponent_lead": 0.45
+  },
+  {
+    "policy": "starter",
+    "seed": 81122,
+    "start": [
+      20.99435515667244,
+      -148.3393171349004,
+      -0.2733830026018188
+    ],
+    "enemy_start": [
+      -36.60859084801488,
+      -159.4327271424201,
+      -0.8954855452234642
+    ],
+    "eliminated": false,
+    "survived": false,
+    "time": 12.4,
+    "damage_dealt": 900.0,
+    "damage_taken": 1440.0,
+    "shots": 32,
+    "hits": 20,
+    "opponent_lead": 0.75
+  },
+  {
+    "policy": "pilot",
+    "seed": 81122,
+    "start": [
+      20.99435515667244,
+      -148.3393171349004,
+      -0.2733830026018188
+    ],
+    "enemy_start": [
+      -36.60859084801488,
+      -159.4327271424201,
+      -0.8954855452234642
+    ],
+    "eliminated": false,
+    "survived": true,
+    "time": 24.0,
+    "damage_dealt": 1215.0,
+    "damage_taken": 900.0,
+    "shots": 35,
+    "hits": 27,
+    "opponent_lead": 0.75
+  },
+  {
+    "policy": "starter",
+    "seed": 81235,
+    "start": [
+      -323.90407141240695,
+      159.97553779473424,
+      -1.8414736827704548
+    ],
+    "enemy_start": [
+      -234.967329032368,
+      201.1825907732224,
+      -5.154557668745326
+    ],
+    "eliminated": false,
+    "survived": false,
+    "time": 12.4,
+    "damage_dealt": 495.0,
+    "damage_taken": 1440.0,
+    "shots": 32,
+    "hits": 11,
+    "opponent_lead": 0.45
+  },
+  {
+    "policy": "pilot",
+    "seed": 81235,
+    "start": [
+      -323.90407141240695,
+      159.97553779473424,
+      -1.8414736827704548
+    ],
+    "enemy_start": [
+      -234.967329032368,
+      201.1825907732224,
+      -5.154557668745326
+    ],
+    "eliminated": true,
+    "survived": true,
+    "time": 15.9,
+    "damage_dealt": 1440.0,
+    "damage_taken": 1035.0,
+    "shots": 38,
+    "hits": 32,
+    "opponent_lead": 0.45
+  },
+  {
+    "policy": "starter",
+    "seed": 81348,
+    "start": [
+      -305.07825213705223,
+      -28.227345462180267,
+      -4.942273454621803
+    ],
+    "enemy_start": [
+      -319.80299750672384,
+      -113.23909859136343,
+      -5.008250991506418
+    ],
+    "eliminated": false,
+    "survived": false,
+    "time": 16.35,
+    "damage_dealt": 630.0,
+    "damage_taken": 1440.0,
+    "shots": 39,
+    "hits": 14,
+    "opponent_lead": 0.0
+  },
+  {
+    "policy": "pilot",
+    "seed": 81348,
+    "start": [
+      -305.07825213705223,
+      -28.227345462180267,
+      -4.942273454621803
+    ],
+    "enemy_start": [
+      -319.80299750672384,
+      -113.23909859136343,
+      -5.008250991506418
+    ],
+    "eliminated": true,
+    "survived": true,
+    "time": 15.9,
+    "damage_dealt": 1440.0,
+    "damage_taken": 675.0,
+    "shots": 38,
+    "hits": 32,
+    "opponent_lead": 0.0
+  },
+  {
+    "policy": "starter",
+    "seed": 81461,
+    "start": [
+      179.80087053818283,
+      -27.58819894624125,
+      5.794118010537587
+    ],
+    "enemy_start": [
+      214.0565667178001,
+      -79.55900890997482,
+      4.965024421921747
+    ],
+    "eliminated": false,
+    "survived": false,
+    "time": 12.9,
+    "damage_dealt": 900.0,
+    "damage_taken": 1440.0,
+    "shots": 34,
+    "hits": 20,
+    "opponent_lead": 0.0
+  },
+  {
+    "policy": "pilot",
+    "seed": 81461,
+    "start": [
+      179.80087053818283,
+      -27.58819894624125,
+      5.794118010537587
+    ],
+    "enemy_start": [
+      214.0565667178001,
+      -79.55900890997482,
+      4.965024421921747
+    ],
+    "eliminated": true,
+    "survived": true,
+    "time": 15.9,
+    "damage_dealt": 1440.0,
+    "damage_taken": 810.0,
+    "shots": 38,
+    "hits": 32,
+    "opponent_lead": 0.0
+  },
+  {
+    "policy": "starter",
+    "seed": 81574,
+    "start": [
+      -224.4766414780553,
+      -126.66921407861534,
+      -4.792043833343781
+    ],
+    "enemy_start": [
+      -249.4994436817037,
+      -54.688424208057185,
+      -4.956565175495814
+    ],
+    "eliminated": false,
+    "survived": false,
+    "time": 12.65,
+    "damage_dealt": 1035.0,
+    "damage_taken": 1440.0,
+    "shots": 33,
+    "hits": 23,
+    "opponent_lead": 0.45
+  },
+  {
+    "policy": "pilot",
+    "seed": 81574,
+    "start": [
+      -224.4766414780553,
+      -126.66921407861534,
+      -4.792043833343781
+    ],
+    "enemy_start": [
+      -249.4994436817037,
+      -54.688424208057185,
+      -4.956565175495814
+    ],
+    "eliminated": false,
+    "survived": true,
+    "time": 24.0,
+    "damage_dealt": 1350.0,
+    "damage_taken": 1035.0,
+    "shots": 32,
+    "hits": 30,
+    "opponent_lead": 0.45
+  },
+  {
+    "policy": "starter",
+    "seed": 81687,
+    "start": [
+      45.20159729583423,
+      -165.48378011686611,
+      0.3304938300440884
+    ],
+    "enemy_start": [
+      27.84529641313249,
+      -67.43594332232968,
+      1.0601741594607392
+    ],
+    "eliminated": false,
+    "survived": true,
+    "time": 24.0,
+    "damage_dealt": 855.0,
+    "damage_taken": 1395.0,
+    "shots": 60,
+    "hits": 19,
+    "opponent_lead": 0.0
+  },
+  {
+    "policy": "pilot",
+    "seed": 81687,
+    "start": [
+      45.20159729583423,
+      -165.48378011686611,
+      0.3304938300440884
+    ],
+    "enemy_start": [
+      27.84529641313249,
+      -67.43594332232968,
+      1.0601741594607392
+    ],
+    "eliminated": true,
+    "survived": true,
+    "time": 20.05,
+    "damage_dealt": 1440.0,
+    "damage_taken": 540.0,
+    "shots": 43,
+    "hits": 32,
+    "opponent_lead": 0.0
+  },
+  {
+    "policy": "starter",
+    "seed": 81800,
+    "start": [
+      -249.36555041859967,
+      -215.00295566326037,
+      -5.5200000000000005
+    ],
+    "enemy_start": [
+      -216.31063628430928,
+      -300.6995097589862,
+      -5.6247207060332105
+    ],
+    "eliminated": false,
+    "survived": false,
+    "time": 16.85,
+    "damage_dealt": 810.0,
+    "damage_taken": 1440.0,
+    "shots": 41,
+    "hits": 18,
+    "opponent_lead": 0.0
+  },
+  {
+    "policy": "pilot",
+    "seed": 81800,
+    "start": [
+      -249.36555041859967,
+      -215.00295566326037,
+      -5.5200000000000005
+    ],
+    "enemy_start": [
+      -216.31063628430928,
+      -300.6995097589862,
+      -5.6247207060332105
+    ],
+    "eliminated": true,
+    "survived": true,
+    "time": 15.9,
+    "damage_dealt": 1440.0,
+    "damage_taken": 585.0,
+    "shots": 38,
+    "hits": 32,
+    "opponent_lead": 0.0
+  }
+]

@@ -1,0 +1,830 @@
+[
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 4141,
+    "split": "dev",
+    "blocked": true,
+    "start": [
+      -306.3815645334912,
+      230.85568673413985,
+      14.629482374129543
+    ],
+    "goal": [
+      -258.2878884041843,
+      373.1865219133947,
+      -2.9154180075060547
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 320.0,
+    "remaining_m": 41.7,
+    "nearest_m": 41.7,
+    "target_entry_s": 32.05
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 5742,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      -295.2375239565621,
+      -164.59710792000146,
+      -5.317624760434379
+    ],
+    "goal": [
+      -299.9157811979611,
+      -18.281976142990942,
+      -4.84281976142991
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 50.5,
+    "nearest_m": 0.8,
+    "target_entry_s": 9.6
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 7343,
+    "split": "dev",
+    "blocked": true,
+    "start": [
+      -462.7530818087717,
+      166.84375518572665,
+      -4.2925415965222475
+    ],
+    "goal": [
+      -310.5694669904153,
+      87.5459949134547,
+      -9.23
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 45.7,
+    "nearest_m": 0.8,
+    "target_entry_s": 15.75
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 8944,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      -264.2575503938998,
+      -169.09333835732025,
+      -5.47
+    ],
+    "goal": [
+      -356.2967259746877,
+      -37.32220440587108,
+      -3.4331525056825445
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 16.2,
+    "nearest_m": 16.2,
+    "target_entry_s": 12.3
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 10545,
+    "split": "dev",
+    "blocked": true,
+    "start": [
+      -401.29895288832626,
+      -277.0917031590192,
+      -1.7722838971378467
+    ],
+    "goal": [
+      -467.4342053977877,
+      -122.66062845049439,
+      -4.863918946598744
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 51.5,
+    "nearest_m": 11.5,
+    "target_entry_s": 15.85
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 12146,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      -466.18853948228747,
+      18.584607286310472,
+      -5.378497742668272
+    ],
+    "goal": [
+      -306.9210195666406,
+      -39.57687325373998,
+      -5.140789804333594
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 360.0,
+    "remaining_m": 50.9,
+    "nearest_m": 50.9,
+    "target_entry_s": 11.3
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 13747,
+    "split": "dev",
+    "blocked": true,
+    "start": [
+      312.83806009020236,
+      221.45298301970564,
+      4.23485819729393
+    ],
+    "goal": [
+      268.19308359265926,
+      87.62382969036318,
+      4.991830867169775
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 41.4,
+    "nearest_m": 0.5,
+    "target_entry_s": 19.05
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 15348,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      -430.41361882435535,
+      164.12090537484028,
+      -5.802246193277383
+    ],
+    "goal": [
+      -390.8664066455148,
+      23.01400402563317,
+      -4.798155641525443
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 12.3,
+    "nearest_m": 12.3,
+    "target_entry_s": 14.35
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 16949,
+    "split": "dev",
+    "blocked": true,
+    "start": [
+      -365.32799091379513,
+      255.0089494241766,
+      -5.420029353298136
+    ],
+    "goal": [
+      -358.88725136084884,
+      108.07378623398589,
+      20.41892697157132
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 44.0,
+    "nearest_m": 2.4,
+    "target_entry_s": 9.55
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 18550,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      -428.2687118862056,
+      137.33971484591518,
+      -5.771774264691877
+    ],
+    "goal": [
+      -434.8477961281325,
+      -30.704465264869583,
+      -4.876506107253068
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 30.3,
+    "nearest_m": 15.5,
+    "target_entry_s": 22.0
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 20151,
+    "split": "dev",
+    "blocked": true,
+    "start": [
+      173.27135318958972,
+      -68.15462387502279,
+      5.281505607538046
+    ],
+    "goal": [
+      38.2702595787398,
+      -155.99757944756294,
+      0.3708280468991429
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 46.8,
+    "nearest_m": 32.5,
+    "target_entry_s": 9.35
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 21752,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      111.99242368323962,
+      -7.562774172550064,
+      4.679057716375109
+    ],
+    "goal": [
+      228.9952372052747,
+      -98.07561055888677,
+      5.0095736888661975
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 45.6,
+    "nearest_m": 35.2,
+    "target_entry_s": 16.9
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 4141,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      -439.18042202856407,
+      -276.5518984569719,
+      -3.3419154930634862
+    ],
+    "goal": [
+      -439.2358511814738,
+      -257.6633158617302,
+      -1.3942901011301343
+    ],
+    "success": true,
+    "time": 1.1,
+    "zone_damage": 0.0,
+    "remaining_m": 3.3,
+    "nearest_m": 3.3,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 5742,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      -442.4086014221987,
+      27.690846692895832,
+      -5.233360613435111
+    ],
+    "goal": [
+      -420.64682181115813,
+      35.42823615114258,
+      -5.069249420376992
+    ],
+    "success": true,
+    "time": 1.3,
+    "zone_damage": 0.0,
+    "remaining_m": 3.0,
+    "nearest_m": 3.0,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 7343,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      232.466677646702,
+      -39.575334714710465,
+      5.087232934863415
+    ],
+    "goal": [
+      236.575580018102,
+      -19.71161378454793,
+      5.220299555766643
+    ],
+    "success": true,
+    "time": 1.2,
+    "zone_damage": 0.0,
+    "remaining_m": 2.9,
+    "nearest_m": 2.9,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 8944,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      506.31091687864796,
+      -279.5035064042995,
+      0.2775516357054273
+    ],
+    "goal": [
+      476.4380836374981,
+      -270.20790572554034,
+      0.5319064928425599
+    ],
+    "success": true,
+    "time": 1.8,
+    "zone_damage": 0.0,
+    "remaining_m": 3.2,
+    "nearest_m": 3.2,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 10545,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      -401.29895288832626,
+      -277.0917031590192,
+      -1.7722838971378467
+    ],
+    "goal": [
+      -413.59475766131015,
+      -248.3800210613897,
+      -1.1031958337371737
+    ],
+    "success": true,
+    "time": 1.8,
+    "zone_damage": 0.0,
+    "remaining_m": 3.2,
+    "nearest_m": 3.2,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 12146,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      -273.7228935876684,
+      -124.67828824741389,
+      -5.427228935876684
+    ],
+    "goal": [
+      -256.0572838274416,
+      -110.38612641590353,
+      -5.250221187989792
+    ],
+    "success": true,
+    "time": 1.4,
+    "zone_damage": 0.0,
+    "remaining_m": 3.2,
+    "nearest_m": 3.2,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 13747,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      378.19785657878276,
+      -88.14226178390484,
+      2.232923159096018
+    ],
+    "goal": [
+      350.75841492860627,
+      -79.86044384241086,
+      2.740712419280792
+    ],
+    "success": true,
+    "time": 1.6,
+    "zone_damage": 0.0,
+    "remaining_m": 3.3,
+    "nearest_m": 3.3,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 15348,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      -430.41361882435535,
+      164.12090537484028,
+      -5.802246193277383
+    ],
+    "goal": [
+      -424.5388005114811,
+      143.15918993531807,
+      -5.75085771618572
+    ],
+    "success": true,
+    "time": 1.3,
+    "zone_damage": 0.0,
+    "remaining_m": 3.4,
+    "nearest_m": 3.4,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 16949,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      -139.03296946931363,
+      238.36018438553327,
+      -5.2
+    ],
+    "goal": [
+      -136.5771770864889,
+      207.2120582297547,
+      -5.177477021648233
+    ],
+    "success": true,
+    "time": 1.8,
+    "zone_damage": 0.0,
+    "remaining_m": 3.2,
+    "nearest_m": 3.2,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 18550,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      427.7845037485538,
+      -61.15598611228978,
+      2.0590352402686665
+    ],
+    "goal": [
+      445.74887344340965,
+      -58.18671025086369,
+      2.181243263850918
+    ],
+    "success": true,
+    "time": 1.1,
+    "zone_damage": 0.0,
+    "remaining_m": 2.8,
+    "nearest_m": 2.8,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 20151,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      173.27135318958972,
+      -68.15462387502279,
+      5.281505607538046
+    ],
+    "goal": [
+      149.65525580705574,
+      -83.52122378680298,
+      4.971308227403866
+    ],
+    "success": true,
+    "time": 1.6,
+    "zone_damage": 0.0,
+    "remaining_m": 3.0,
+    "nearest_m": 3.0,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 21752,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      -390.05903485540017,
+      287.7166603111073,
+      -5.347013712663367
+    ],
+    "goal": [
+      -393.50376470594927,
+      320.37753534277766,
+      -5.1405758295260675
+    ],
+    "success": true,
+    "time": 1.8,
+    "zone_damage": 0.0,
+    "remaining_m": 3.0,
+    "nearest_m": 3.0,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 4141,
+    "split": "dev",
+    "blocked": true,
+    "start": [
+      -306.3815645334912,
+      230.85568673413985,
+      14.629482374129543
+    ],
+    "goal": [
+      -291.31121382484747,
+      275.45563781790514,
+      -3.7210043130633217
+    ],
+    "success": false,
+    "time": 22.0,
+    "zone_damage": 0.0,
+    "remaining_m": 28.4,
+    "nearest_m": 28.1,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 5742,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      -442.4086014221987,
+      27.690846692895832,
+      -5.233360613435111
+    ],
+    "goal": [
+      -398.58307672598625,
+      43.272989277161805,
+      -5.199629018283373
+    ],
+    "success": true,
+    "time": 6.1,
+    "zone_damage": 0.0,
+    "remaining_m": 3.6,
+    "nearest_m": 3.6,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 7343,
+    "split": "dev",
+    "blocked": true,
+    "start": [
+      -71.07462986767132,
+      -215.5640875388744,
+      -1.02639832272551
+    ],
+    "goal": [
+      -36.11008533094403,
+      -256.6513397559037,
+      -2.1263327568128125
+    ],
+    "success": true,
+    "time": 6.5,
+    "zone_damage": 0.0,
+    "remaining_m": 3.3,
+    "nearest_m": 3.3,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 8944,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      -264.2575503938998,
+      -169.09333835732025,
+      -5.47
+    ],
+    "goal": [
+      -296.1645456050773,
+      -123.41256260689141,
+      -5.328354543949226
+    ],
+    "success": true,
+    "time": 6.6,
+    "zone_damage": 0.0,
+    "remaining_m": 3.9,
+    "nearest_m": 3.9,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 10545,
+    "split": "dev",
+    "blocked": true,
+    "start": [
+      388.63351948049376,
+      119.70504774121372,
+      4.432949522587863
+    ],
+    "goal": [
+      434.6300612213745,
+      90.45572435308874,
+      4.15581058973305
+    ],
+    "success": true,
+    "time": 7.2,
+    "zone_damage": 0.0,
+    "remaining_m": 3.4,
+    "nearest_m": 3.4,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 12146,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      -273.7228935876684,
+      -124.67828824741389,
+      -5.427228935876684
+    ],
+    "goal": [
+      -238.1038291630879,
+      -95.86108691937085,
+      -4.929649160824588
+    ],
+    "success": true,
+    "time": 6.1,
+    "zone_damage": 0.0,
+    "remaining_m": 3.8,
+    "nearest_m": 3.8,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 13747,
+    "split": "dev",
+    "blocked": true,
+    "start": [
+      72.41348569619379,
+      161.80686022699382,
+      2.9987428870796276
+    ],
+    "goal": [
+      82.79746361893078,
+      204.00656149074825,
+      1.7799343850925176
+    ],
+    "success": false,
+    "time": 22.0,
+    "zone_damage": 0.0,
+    "remaining_m": 25.9,
+    "nearest_m": 25.9,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 15348,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      -430.41361882435535,
+      164.12090537484028,
+      -5.802246193277383
+    ],
+    "goal": [
+      -418.5297475318511,
+      121.7185168945903,
+      -5.717780119582925
+    ],
+    "success": true,
+    "time": 6.0,
+    "zone_damage": 0.0,
+    "remaining_m": 3.9,
+    "nearest_m": 3.9,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 16949,
+    "split": "dev",
+    "blocked": true,
+    "start": [
+      -262.5147285522362,
+      -10.7686936429767,
+      23.400000000000002
+    ],
+    "goal": [
+      -239.9827968392729,
+      26.291546255736463,
+      4.8031151741466065
+    ],
+    "success": true,
+    "time": 6.9,
+    "zone_damage": 0.0,
+    "remaining_m": 0.3,
+    "nearest_m": 0.3,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 18550,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      427.7845037485538,
+      -61.15598611228978,
+      2.0590352402686665
+    ],
+    "goal": [
+      464.67248068945185,
+      -55.058884941029916,
+      2.1994111505897007
+    ],
+    "success": true,
+    "time": 5.7,
+    "zone_damage": 0.0,
+    "remaining_m": 4.3,
+    "nearest_m": 4.3,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 20151,
+    "split": "dev",
+    "blocked": true,
+    "start": [
+      -150.6399597749147,
+      237.86677695963948,
+      -5.078533034905311
+    ],
+    "goal": [
+      -215.43073647107664,
+      240.96406916483133,
+      27.62391625469966
+    ],
+    "success": true,
+    "time": 12.8,
+    "zone_damage": 0.0,
+    "remaining_m": 0.9,
+    "nearest_m": 0.9,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 21752,
+    "split": "dev",
+    "blocked": false,
+    "start": [
+      -390.05903485540017,
+      287.7166603111073,
+      -5.347013712663367
+    ],
+    "goal": [
+      -396.8458159284209,
+      352.0648728299798,
+      -4.671786224831987
+    ],
+    "success": true,
+    "time": 7.4,
+    "zone_damage": 0.0,
+    "remaining_m": 3.7,
+    "nearest_m": 3.7,
+    "target_entry_s": null
+  }
+]

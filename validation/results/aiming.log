@@ -1,0 +1,6 @@
+..........
+----------------------------------------------------------------------
+Ran 10 tests in 0.156s
+
+OK
+synthetic hits [stationary aim, velocity lead, eligible pairs] {'gun': [161, 250, 256], 'mortar': [75, 256, 256]}

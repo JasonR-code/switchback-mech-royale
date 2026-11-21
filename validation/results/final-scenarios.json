@@ -1,0 +1,2486 @@
+[
+  {
+    "policy": "starter",
+    "family": "zone",
+    "seed": 70951,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      -394.2761121215674,
+      63.36269064372425,
+      -5.29
+    ],
+    "goal": [
+      -335.169237282888,
+      189.9012820848307,
+      14.334597917006185
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 730.0,
+    "remaining_m": 1.1,
+    "nearest_m": 0.1,
+    "target_entry_s": 33.9
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 70951,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      -394.2761121215674,
+      63.36269064372425,
+      -5.29
+    ],
+    "goal": [
+      -335.169237282888,
+      189.9012820848307,
+      14.334597917006185
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 50.4,
+    "nearest_m": 38.5,
+    "target_entry_s": 5.15
+  },
+  {
+    "policy": "no-route",
+    "family": "zone",
+    "seed": 70951,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      -394.2761121215674,
+      63.36269064372425,
+      -5.29
+    ],
+    "goal": [
+      -335.169237282888,
+      189.9012820848307,
+      14.334597917006185
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 39.9,
+    "nearest_m": 38.5,
+    "target_entry_s": 5.1
+  },
+  {
+    "policy": "starter",
+    "family": "zone",
+    "seed": 72552,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      351.33484059556406,
+      -175.8824385889314,
+      2.4787791680223923
+    ],
+    "goal": [
+      490.9758875821694,
+      -160.00693174539109,
+      2.3895870690972996
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 6.2,
+    "nearest_m": 0.2,
+    "target_entry_s": 6.1
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 72552,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      351.33484059556406,
+      -175.8824385889314,
+      2.4787791680223923
+    ],
+    "goal": [
+      490.9758875821694,
+      -160.00693174539109,
+      2.3895870690972996
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 25.3,
+    "nearest_m": 1.9,
+    "target_entry_s": 12.35
+  },
+  {
+    "policy": "no-route",
+    "family": "zone",
+    "seed": 72552,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      351.33484059556406,
+      -175.8824385889314,
+      2.4787791680223923
+    ],
+    "goal": [
+      490.9758875821694,
+      -160.00693174539109,
+      2.3895870690972996
+    ],
+    "success": false,
+    "time": 40.0,
+    "zone_damage": 980.0,
+    "remaining_m": 92.3,
+    "nearest_m": 88.7,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "zone",
+    "seed": 74153,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      163.51248688612088,
+      256.0431997488303,
+      3.3593857427458103
+    ],
+    "goal": [
+      80.14517165535266,
+      122.23481100008101,
+      2.6403933072315566
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 395.0,
+    "remaining_m": 1.8,
+    "nearest_m": 0.1,
+    "target_entry_s": 31.95
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 74153,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      163.51248688612088,
+      256.0431997488303,
+      3.3593857427458103
+    ],
+    "goal": [
+      80.14517165535266,
+      122.23481100008101,
+      2.6403933072315566
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 44.1,
+    "nearest_m": 43.9,
+    "target_entry_s": 24.65
+  },
+  {
+    "policy": "no-route",
+    "family": "zone",
+    "seed": 74153,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      163.51248688612088,
+      256.0431997488303,
+      3.3593857427458103
+    ],
+    "goal": [
+      80.14517165535266,
+      122.23481100008101,
+      2.6403933072315566
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 43.6,
+    "nearest_m": 33.4,
+    "target_entry_s": 18.35
+  },
+  {
+    "policy": "starter",
+    "family": "zone",
+    "seed": 75754,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      466.777781089115,
+      -135.23482698035681,
+      1.9694781700417872
+    ],
+    "goal": [
+      546.8945089899091,
+      -19.13757687323246,
+      3.645138642333534
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 6.2,
+    "nearest_m": 0.0,
+    "target_entry_s": 6.1
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 75754,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      466.777781089115,
+      -135.23482698035681,
+      1.9694781700417872
+    ],
+    "goal": [
+      546.8945089899091,
+      -19.13757687323246,
+      3.645138642333534
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 49.0,
+    "nearest_m": 10.1,
+    "target_entry_s": 15.25
+  },
+  {
+    "policy": "no-route",
+    "family": "zone",
+    "seed": 75754,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      466.777781089115,
+      -135.23482698035681,
+      1.9694781700417872
+    ],
+    "goal": [
+      546.8945089899091,
+      -19.13757687323246,
+      3.645138642333534
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 50.0,
+    "nearest_m": 3.6,
+    "target_entry_s": 15.4
+  },
+  {
+    "policy": "starter",
+    "family": "zone",
+    "seed": 77355,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      316.52674692971857,
+      286.3490179199717,
+      4.119529462400851
+    ],
+    "goal": [
+      470.77915606227407,
+      329.269044713515,
+      5.162768628505666
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 245.0,
+    "remaining_m": 2.9,
+    "nearest_m": 0.0,
+    "target_entry_s": 27.1
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 77355,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      316.52674692971857,
+      286.3490179199717,
+      4.119529462400851
+    ],
+    "goal": [
+      470.77915606227407,
+      329.269044713515,
+      5.162768628505666
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 48.6,
+    "nearest_m": 0.9,
+    "target_entry_s": 5.9
+  },
+  {
+    "policy": "no-route",
+    "family": "zone",
+    "seed": 77355,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      316.52674692971857,
+      286.3490179199717,
+      4.119529462400851
+    ],
+    "goal": [
+      470.77915606227407,
+      329.269044713515,
+      5.162768628505666
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 45.5,
+    "nearest_m": 44.9,
+    "target_entry_s": 5.9
+  },
+  {
+    "policy": "starter",
+    "family": "zone",
+    "seed": 78956,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      6.4641525806671325,
+      122.08966689636856,
+      0.22113120567870068
+    ],
+    "goal": [
+      119.68856522263658,
+      3.351114400975092,
+      5.207106073231595
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 5.5,
+    "nearest_m": 0.0,
+    "target_entry_s": 8.15
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 78956,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      6.4641525806671325,
+      122.08966689636856,
+      0.22113120567870068
+    ],
+    "goal": [
+      119.68856522263658,
+      3.351114400975092,
+      5.207106073231595
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 17.8,
+    "nearest_m": 5.0,
+    "target_entry_s": 13.9
+  },
+  {
+    "policy": "no-route",
+    "family": "zone",
+    "seed": 78956,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      6.4641525806671325,
+      122.08966689636856,
+      0.22113120567870068
+    ],
+    "goal": [
+      119.68856522263658,
+      3.351114400975092,
+      5.207106073231595
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 53.8,
+    "nearest_m": 24.3,
+    "target_entry_s": 19.45
+  },
+  {
+    "policy": "starter",
+    "family": "zone",
+    "seed": 80557,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      95.58172890969308,
+      -196.4040320684271,
+      2.6897983965786443
+    ],
+    "goal": [
+      236.6759883374265,
+      -125.08039114894444,
+      4.804847939604624
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 370.0,
+    "remaining_m": 1.5,
+    "nearest_m": 0.0,
+    "target_entry_s": 32.75
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 80557,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      95.58172890969308,
+      -196.4040320684271,
+      2.6897983965786443
+    ],
+    "goal": [
+      236.6759883374265,
+      -125.08039114894444,
+      4.804847939604624
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 46.8,
+    "nearest_m": 3.3,
+    "target_entry_s": 11.55
+  },
+  {
+    "policy": "no-route",
+    "family": "zone",
+    "seed": 80557,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      95.58172890969308,
+      -196.4040320684271,
+      2.6897983965786443
+    ],
+    "goal": [
+      236.6759883374265,
+      -125.08039114894444,
+      4.804847939604624
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 37.9,
+    "nearest_m": 4.5,
+    "target_entry_s": 11.95
+  },
+  {
+    "policy": "starter",
+    "family": "zone",
+    "seed": 82158,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      -201.03238688552307,
+      104.25596845411246,
+      17.587854576671273
+    ],
+    "goal": [
+      -162.81871926151422,
+      237.06468001385323,
+      -4.921812807384858
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 61.3,
+    "nearest_m": 61.3,
+    "target_entry_s": 5.9
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 82158,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      -201.03238688552307,
+      104.25596845411246,
+      17.587854576671273
+    ],
+    "goal": [
+      -162.81871926151422,
+      237.06468001385323,
+      -4.921812807384858
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 33.8,
+    "nearest_m": 26.1,
+    "target_entry_s": 11.05
+  },
+  {
+    "policy": "no-route",
+    "family": "zone",
+    "seed": 82158,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      -201.03238688552307,
+      104.25596845411246,
+      17.587854576671273
+    ],
+    "goal": [
+      -162.81871926151422,
+      237.06468001385323,
+      -4.921812807384858
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 48.8,
+    "nearest_m": 36.4,
+    "target_entry_s": 9.85
+  },
+  {
+    "policy": "starter",
+    "family": "zone",
+    "seed": 83759,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      -89.06745067513805,
+      136.6993273194583,
+      -3.3774229612327122
+    ],
+    "goal": [
+      -247.47975941853895,
+      85.70490799751067,
+      -9.23
+    ],
+    "success": false,
+    "time": 40.0,
+    "zone_damage": 460.0,
+    "remaining_m": 70.5,
+    "nearest_m": 70.5,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 83759,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      -89.06745067513805,
+      136.6993273194583,
+      -3.3774229612327122
+    ],
+    "goal": [
+      -247.47975941853895,
+      85.70490799751067,
+      -9.23
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 41.6,
+    "nearest_m": 26.3,
+    "target_entry_s": 22.0
+  },
+  {
+    "policy": "no-route",
+    "family": "zone",
+    "seed": 83759,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      -89.06745067513805,
+      136.6993273194583,
+      -3.3774229612327122
+    ],
+    "goal": [
+      -247.47975941853895,
+      85.70490799751067,
+      -9.23
+    ],
+    "success": false,
+    "time": 40.0,
+    "zone_damage": 425.0,
+    "remaining_m": 71.1,
+    "nearest_m": 71.1,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "zone",
+    "seed": 85360,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      490.5961204224918,
+      -193.42757656767776,
+      2.8885515313535555
+    ],
+    "goal": [
+      403.37898480946865,
+      -74.52770908221376,
+      2.0262101519053135
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 5.7,
+    "nearest_m": 0.0,
+    "target_entry_s": 6.65
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 85360,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      490.5961204224918,
+      -193.42757656767776,
+      2.8885515313535555
+    ],
+    "goal": [
+      403.37898480946865,
+      -74.52770908221376,
+      2.0262101519053135
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 48.8,
+    "nearest_m": 30.3,
+    "target_entry_s": 10.0
+  },
+  {
+    "policy": "no-route",
+    "family": "zone",
+    "seed": 85360,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      490.5961204224918,
+      -193.42757656767776,
+      2.8885515313535555
+    ],
+    "goal": [
+      403.37898480946865,
+      -74.52770908221376,
+      2.0262101519053135
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 48.7,
+    "nearest_m": 29.7,
+    "target_entry_s": 9.95
+  },
+  {
+    "policy": "starter",
+    "family": "zone",
+    "seed": 86961,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      -45.11324305289776,
+      -275.43551521074113,
+      -1.3206606347603782
+    ],
+    "goal": [
+      108.43304407807423,
+      -319.54789662155497,
+      -0.530809281472322
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 220.0,
+    "remaining_m": 12.1,
+    "nearest_m": 12.1,
+    "target_entry_s": 35.15
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 86961,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      -45.11324305289776,
+      -275.43551521074113,
+      -1.3206606347603782
+    ],
+    "goal": [
+      108.43304407807423,
+      -319.54789662155497,
+      -0.530809281472322
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 48.2,
+    "nearest_m": 12.8,
+    "target_entry_s": 18.7
+  },
+  {
+    "policy": "no-route",
+    "family": "zone",
+    "seed": 86961,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      -45.11324305289776,
+      -275.43551521074113,
+      -1.3206606347603782
+    ],
+    "goal": [
+      108.43304407807423,
+      -319.54789662155497,
+      -0.530809281472322
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 50.0,
+    "nearest_m": 3.9,
+    "target_entry_s": 23.0
+  },
+  {
+    "policy": "starter",
+    "family": "zone",
+    "seed": 88562,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      -157.14733938644008,
+      276.03806414434854,
+      -4.810380641443485
+    ],
+    "goal": [
+      -185.15563698988507,
+      134.28270439439024,
+      25.972858671102546
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 63.9,
+    "nearest_m": 63.9,
+    "target_entry_s": 6.4
+  },
+  {
+    "policy": "pilot",
+    "family": "zone",
+    "seed": 88562,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      -157.14733938644008,
+      276.03806414434854,
+      -4.810380641443485
+    ],
+    "goal": [
+      -185.15563698988507,
+      134.28270439439024,
+      25.972858671102546
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 46.4,
+    "nearest_m": 46.4,
+    "target_entry_s": 18.55
+  },
+  {
+    "policy": "no-route",
+    "family": "zone",
+    "seed": 88562,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      -157.14733938644008,
+      276.03806414434854,
+      -4.810380641443485
+    ],
+    "goal": [
+      -185.15563698988507,
+      134.28270439439024,
+      25.972858671102546
+    ],
+    "success": true,
+    "time": 40.0,
+    "zone_damage": 0.0,
+    "remaining_m": 33.7,
+    "nearest_m": 21.1,
+    "target_entry_s": 8.75
+  },
+  {
+    "policy": "starter",
+    "family": "loot",
+    "seed": 70951,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      369.82609873442925,
+      114.18100392977152,
+      4.60850472882689
+    ],
+    "goal": [
+      356.8384208713693,
+      140.20217236922767,
+      4.207501018185885
+    ],
+    "success": false,
+    "time": 16.0,
+    "zone_damage": 0.0,
+    "remaining_m": 51.4,
+    "nearest_m": 13.8,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 70951,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      369.82609873442925,
+      114.18100392977152,
+      4.60850472882689
+    ],
+    "goal": [
+      356.8384208713693,
+      140.20217236922767,
+      4.207501018185885
+    ],
+    "success": true,
+    "time": 1.6,
+    "zone_damage": 0.0,
+    "remaining_m": 3.1,
+    "nearest_m": 3.1,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "loot",
+    "seed": 70951,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      369.82609873442925,
+      114.18100392977152,
+      4.60850472882689
+    ],
+    "goal": [
+      356.8384208713693,
+      140.20217236922767,
+      4.207501018185885
+    ],
+    "success": true,
+    "time": 1.6,
+    "zone_damage": 0.0,
+    "remaining_m": 3.1,
+    "nearest_m": 3.1,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "loot",
+    "seed": 72552,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      3.401360084881105,
+      -153.7056768900772,
+      -0.7269458431665445
+    ],
+    "goal": [
+      -23.039266194448345,
+      -152.62252298385758,
+      -1.0937766663697592
+    ],
+    "success": true,
+    "time": 2.2,
+    "zone_damage": 0.0,
+    "remaining_m": 2.8,
+    "nearest_m": 2.8,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 72552,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      3.401360084881105,
+      -153.7056768900772,
+      -0.7269458431665445
+    ],
+    "goal": [
+      -23.039266194448345,
+      -152.62252298385758,
+      -1.0937766663697592
+    ],
+    "success": true,
+    "time": 1.5,
+    "zone_damage": 0.0,
+    "remaining_m": 3.2,
+    "nearest_m": 3.2,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "loot",
+    "seed": 72552,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      3.401360084881105,
+      -153.7056768900772,
+      -0.7269458431665445
+    ],
+    "goal": [
+      -23.039266194448345,
+      -152.62252298385758,
+      -1.0937766663697592
+    ],
+    "success": true,
+    "time": 1.5,
+    "zone_damage": 0.0,
+    "remaining_m": 3.2,
+    "nearest_m": 3.2,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "loot",
+    "seed": 74153,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      -304.913983666818,
+      94.08683005838287,
+      -9.23
+    ],
+    "goal": [
+      -300.7427493575304,
+      118.2552960521595,
+      -9.23
+    ],
+    "success": false,
+    "time": 16.0,
+    "zone_damage": 0.0,
+    "remaining_m": 44.6,
+    "nearest_m": 8.3,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 74153,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      -304.913983666818,
+      94.08683005838287,
+      -9.23
+    ],
+    "goal": [
+      -300.7427493575304,
+      118.2552960521595,
+      -9.23
+    ],
+    "success": true,
+    "time": 1.4,
+    "zone_damage": 0.0,
+    "remaining_m": 3.2,
+    "nearest_m": 3.2,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "loot",
+    "seed": 74153,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      -304.913983666818,
+      94.08683005838287,
+      -9.23
+    ],
+    "goal": [
+      -300.7427493575304,
+      118.2552960521595,
+      -9.23
+    ],
+    "success": true,
+    "time": 1.4,
+    "zone_damage": 0.0,
+    "remaining_m": 3.2,
+    "nearest_m": 3.2,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "loot",
+    "seed": 75754,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      487.40704457380025,
+      -63.72520846548872,
+      2.2240704457380027
+    ],
+    "goal": [
+      477.7956157596948,
+      -41.19124066574294,
+      2.2878281633063597
+    ],
+    "success": false,
+    "time": 16.0,
+    "zone_damage": 0.0,
+    "remaining_m": 91.4,
+    "nearest_m": 24.5,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 75754,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      487.40704457380025,
+      -63.72520846548872,
+      2.2240704457380027
+    ],
+    "goal": [
+      477.7956157596948,
+      -41.19124066574294,
+      2.2878281633063597
+    ],
+    "success": true,
+    "time": 1.4,
+    "zone_damage": 0.0,
+    "remaining_m": 3.2,
+    "nearest_m": 3.2,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "loot",
+    "seed": 75754,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      487.40704457380025,
+      -63.72520846548872,
+      2.2240704457380027
+    ],
+    "goal": [
+      477.7956157596948,
+      -41.19124066574294,
+      2.2878281633063597
+    ],
+    "success": true,
+    "time": 1.4,
+    "zone_damage": 0.0,
+    "remaining_m": 3.2,
+    "nearest_m": 3.2,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "loot",
+    "seed": 77355,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      499.0133222761955,
+      -84.8611598479387,
+      2.281521624282568
+    ],
+    "goal": [
+      472.31433068192706,
+      -78.51662127426353,
+      1.997977094076635
+    ],
+    "success": false,
+    "time": 16.0,
+    "zone_damage": 0.0,
+    "remaining_m": 94.2,
+    "nearest_m": 27.4,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 77355,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      499.0133222761955,
+      -84.8611598479387,
+      2.281521624282568
+    ],
+    "goal": [
+      472.31433068192706,
+      -78.51662127426353,
+      1.997977094076635
+    ],
+    "success": true,
+    "time": 1.6,
+    "zone_damage": 0.0,
+    "remaining_m": 3.3,
+    "nearest_m": 3.3,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "loot",
+    "seed": 77355,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      499.0133222761955,
+      -84.8611598479387,
+      2.281521624282568
+    ],
+    "goal": [
+      472.31433068192706,
+      -78.51662127426353,
+      1.997977094076635
+    ],
+    "success": true,
+    "time": 1.6,
+    "zone_damage": 0.0,
+    "remaining_m": 3.3,
+    "nearest_m": 3.3,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "loot",
+    "seed": 78956,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      207.81462895911375,
+      34.87132689902654,
+      5.583860193029205
+    ],
+    "goal": [
+      213.98593862293393,
+      67.07882552879218,
+      5.148856414690967
+    ],
+    "success": false,
+    "time": 16.0,
+    "zone_damage": 0.0,
+    "remaining_m": 86.1,
+    "nearest_m": 32.8,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 78956,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      207.81462895911375,
+      34.87132689902654,
+      5.583860193029205
+    ],
+    "goal": [
+      213.98593862293393,
+      67.07882552879218,
+      5.148856414690967
+    ],
+    "success": true,
+    "time": 1.8,
+    "zone_damage": 0.0,
+    "remaining_m": 3.0,
+    "nearest_m": 3.0,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "loot",
+    "seed": 78956,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      207.81462895911375,
+      34.87132689902654,
+      5.583860193029205
+    ],
+    "goal": [
+      213.98593862293393,
+      67.07882552879218,
+      5.148856414690967
+    ],
+    "success": true,
+    "time": 1.8,
+    "zone_damage": 0.0,
+    "remaining_m": 2.9,
+    "nearest_m": 2.9,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "loot",
+    "seed": 80557,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      95.58172890969308,
+      -196.4040320684271,
+      2.6897983965786443
+    ],
+    "goal": [
+      119.5586725493405,
+      -184.28360331790952,
+      2.731088110122024
+    ],
+    "success": false,
+    "time": 16.0,
+    "zone_damage": 0.0,
+    "remaining_m": 43.4,
+    "nearest_m": 26.9,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 80557,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      95.58172890969308,
+      -196.4040320684271,
+      2.6897983965786443
+    ],
+    "goal": [
+      119.5586725493405,
+      -184.28360331790952,
+      2.731088110122024
+    ],
+    "success": true,
+    "time": 1.5,
+    "zone_damage": 0.0,
+    "remaining_m": 2.8,
+    "nearest_m": 2.8,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "loot",
+    "seed": 80557,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      95.58172890969308,
+      -196.4040320684271,
+      2.6897983965786443
+    ],
+    "goal": [
+      119.5586725493405,
+      -184.28360331790952,
+      2.731088110122024
+    ],
+    "success": true,
+    "time": 1.5,
+    "zone_damage": 0.0,
+    "remaining_m": 2.8,
+    "nearest_m": 2.8,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "loot",
+    "seed": 82158,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      121.03087255470689,
+      -222.15010088717221,
+      1.635493252269948
+    ],
+    "goal": [
+      120.56722473272475,
+      -249.2882451421766,
+      -0.012971341311591663
+    ],
+    "success": false,
+    "time": 16.0,
+    "zone_damage": 0.0,
+    "remaining_m": 66.0,
+    "nearest_m": 24.0,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 82158,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      121.03087255470689,
+      -222.15010088717221,
+      1.635493252269948
+    ],
+    "goal": [
+      120.56722473272475,
+      -249.2882451421766,
+      -0.012971341311591663
+    ],
+    "success": true,
+    "time": 1.5,
+    "zone_damage": 0.0,
+    "remaining_m": 3.1,
+    "nearest_m": 3.1,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "loot",
+    "seed": 82158,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      121.03087255470689,
+      -222.15010088717221,
+      1.635493252269948
+    ],
+    "goal": [
+      120.56722473272475,
+      -249.2882451421766,
+      -0.012971341311591663
+    ],
+    "success": true,
+    "time": 1.5,
+    "zone_damage": 0.0,
+    "remaining_m": 3.1,
+    "nearest_m": 3.1,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "loot",
+    "seed": 83759,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      236.16282130808577,
+      -175.8946628937815,
+      4.677796944900471
+    ],
+    "goal": [
+      237.2576585472595,
+      -200.83087361825886,
+      3.513094341961064
+    ],
+    "success": false,
+    "time": 16.0,
+    "zone_damage": 0.0,
+    "remaining_m": 73.8,
+    "nearest_m": 25.0,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 83759,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      236.16282130808577,
+      -175.8946628937815,
+      4.677796944900471
+    ],
+    "goal": [
+      237.2576585472595,
+      -200.83087361825886,
+      3.513094341961064
+    ],
+    "success": true,
+    "time": 1.4,
+    "zone_damage": 0.0,
+    "remaining_m": 2.9,
+    "nearest_m": 2.9,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "loot",
+    "seed": 83759,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      236.16282130808577,
+      -175.8946628937815,
+      4.677796944900471
+    ],
+    "goal": [
+      237.2576585472595,
+      -200.83087361825886,
+      3.513094341961064
+    ],
+    "success": true,
+    "time": 1.4,
+    "zone_damage": 0.0,
+    "remaining_m": 2.9,
+    "nearest_m": 2.9,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "loot",
+    "seed": 85360,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      490.5961204224918,
+      -193.42757656767776,
+      2.8885515313535555
+    ],
+    "goal": [
+      477.4815571156056,
+      -175.54898162921177,
+      2.3199365297602856
+    ],
+    "success": false,
+    "time": 16.0,
+    "zone_damage": 0.0,
+    "remaining_m": 64.1,
+    "nearest_m": 16.9,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 85360,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      490.5961204224918,
+      -193.42757656767776,
+      2.8885515313535555
+    ],
+    "goal": [
+      477.4815571156056,
+      -175.54898162921177,
+      2.3199365297602856
+    ],
+    "success": true,
+    "time": 1.3,
+    "zone_damage": 0.0,
+    "remaining_m": 2.8,
+    "nearest_m": 2.8,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "loot",
+    "seed": 85360,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      490.5961204224918,
+      -193.42757656767776,
+      2.8885515313535555
+    ],
+    "goal": [
+      477.4815571156056,
+      -175.54898162921177,
+      2.3199365297602856
+    ],
+    "success": true,
+    "time": 1.3,
+    "zone_damage": 0.0,
+    "remaining_m": 2.8,
+    "nearest_m": 2.8,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "loot",
+    "seed": 86961,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      -251.10399429190403,
+      22.656687103021,
+      6.042295639988752
+    ],
+    "goal": [
+      -238.56149276169685,
+      6.2761185880393455,
+      15.0214063574276
+    ],
+    "success": false,
+    "time": 16.0,
+    "zone_damage": 0.0,
+    "remaining_m": 12.8,
+    "nearest_m": 9.7,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 86961,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      -251.10399429190403,
+      22.656687103021,
+      6.042295639988752
+    ],
+    "goal": [
+      -238.56149276169685,
+      6.2761185880393455,
+      15.0214063574276
+    ],
+    "success": true,
+    "time": 1.2,
+    "zone_damage": 0.0,
+    "remaining_m": 3.3,
+    "nearest_m": 3.3,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "loot",
+    "seed": 86961,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      -251.10399429190403,
+      22.656687103021,
+      6.042295639988752
+    ],
+    "goal": [
+      -238.56149276169685,
+      6.2761185880393455,
+      15.0214063574276
+    ],
+    "success": true,
+    "time": 1.2,
+    "zone_damage": 0.0,
+    "remaining_m": 3.2,
+    "nearest_m": 3.2,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "loot",
+    "seed": 88562,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      103.39364363987215,
+      239.28146932599822,
+      1.8677633569737708
+    ],
+    "goal": [
+      81.06787313814732,
+      240.3158901792507,
+      1.2445753323742161
+    ],
+    "success": false,
+    "time": 16.0,
+    "zone_damage": 0.0,
+    "remaining_m": 54.3,
+    "nearest_m": 14.5,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "loot",
+    "seed": 88562,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      103.39364363987215,
+      239.28146932599822,
+      1.8677633569737708
+    ],
+    "goal": [
+      81.06787313814732,
+      240.3158901792507,
+      1.2445753323742161
+    ],
+    "success": true,
+    "time": 1.3,
+    "zone_damage": 0.0,
+    "remaining_m": 3.0,
+    "nearest_m": 3.0,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "loot",
+    "seed": 88562,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      103.39364363987215,
+      239.28146932599822,
+      1.8677633569737708
+    ],
+    "goal": [
+      81.06787313814732,
+      240.3158901792507,
+      1.2445753323742161
+    ],
+    "success": true,
+    "time": 1.3,
+    "zone_damage": 0.0,
+    "remaining_m": 3.0,
+    "nearest_m": 3.0,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "drop",
+    "seed": 70951,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      -394.2761121215674,
+      63.36269064372425,
+      -5.29
+    ],
+    "goal": [
+      -378.0378133187365,
+      98.1263533059463,
+      44.756047583141076
+    ],
+    "success": false,
+    "time": 22.0,
+    "zone_damage": 0.0,
+    "remaining_m": 75.2,
+    "nearest_m": 37.8,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 70951,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      -394.2761121215674,
+      63.36269064372425,
+      -5.29
+    ],
+    "goal": [
+      -378.0378133187365,
+      98.1263533059463,
+      44.756047583141076
+    ],
+    "success": true,
+    "time": 6.2,
+    "zone_damage": 0.0,
+    "remaining_m": 7.8,
+    "nearest_m": 7.8,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "drop",
+    "seed": 70951,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      -394.2761121215674,
+      63.36269064372425,
+      -5.29
+    ],
+    "goal": [
+      -378.0378133187365,
+      98.1263533059463,
+      44.756047583141076
+    ],
+    "success": false,
+    "time": 22.0,
+    "zone_damage": 0.0,
+    "remaining_m": 8.1,
+    "nearest_m": 8.1,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "drop",
+    "seed": 72552,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      3.401360084881105,
+      -153.7056768900772,
+      -0.7269458431665445
+    ],
+    "goal": [
+      -49.35162632726877,
+      -151.54462356655054,
+      -0.3512212202956426
+    ],
+    "success": false,
+    "time": 22.0,
+    "zone_damage": 0.0,
+    "remaining_m": 15.6,
+    "nearest_m": 4.8,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 72552,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      3.401360084881105,
+      -153.7056768900772,
+      -0.7269458431665445
+    ],
+    "goal": [
+      -49.35162632726877,
+      -151.54462356655054,
+      -0.3512212202956426
+    ],
+    "success": true,
+    "time": 6.5,
+    "zone_damage": 0.0,
+    "remaining_m": 4.2,
+    "nearest_m": 4.2,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "drop",
+    "seed": 72552,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      3.401360084881105,
+      -153.7056768900772,
+      -0.7269458431665445
+    ],
+    "goal": [
+      -49.35162632726877,
+      -151.54462356655054,
+      -0.3512212202956426
+    ],
+    "success": true,
+    "time": 6.4,
+    "zone_damage": 0.0,
+    "remaining_m": 4.0,
+    "nearest_m": 4.0,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "drop",
+    "seed": 74153,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      307.633386199366,
+      -274.6236930547816,
+      -1.9392169242616206
+    ],
+    "goal": [
+      370.82307477076876,
+      -260.68670341322866,
+      2.53607036805548
+    ],
+    "success": false,
+    "time": 22.0,
+    "zone_damage": 0.0,
+    "remaining_m": 54.9,
+    "nearest_m": 54.9,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 74153,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      307.633386199366,
+      -274.6236930547816,
+      -1.9392169242616206
+    ],
+    "goal": [
+      370.82307477076876,
+      -260.68670341322866,
+      2.53607036805548
+    ],
+    "success": true,
+    "time": 7.6,
+    "zone_damage": 0.0,
+    "remaining_m": 3.5,
+    "nearest_m": 3.5,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "drop",
+    "seed": 74153,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      307.633386199366,
+      -274.6236930547816,
+      -1.9392169242616206
+    ],
+    "goal": [
+      370.82307477076876,
+      -260.68670341322866,
+      2.53607036805548
+    ],
+    "success": true,
+    "time": 7.6,
+    "zone_damage": 0.0,
+    "remaining_m": 4.2,
+    "nearest_m": 4.2,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "drop",
+    "seed": 75754,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      487.40704457380025,
+      -63.72520846548872,
+      2.2240704457380027
+    ],
+    "goal": [
+      468.13177903033977,
+      -18.534402656216074,
+      3.1246559734378394
+    ],
+    "success": false,
+    "time": 22.0,
+    "zone_damage": 0.0,
+    "remaining_m": 116.5,
+    "nearest_m": 49.1,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 75754,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      487.40704457380025,
+      -63.72520846548872,
+      2.2240704457380027
+    ],
+    "goal": [
+      468.13177903033977,
+      -18.534402656216074,
+      3.1246559734378394
+    ],
+    "success": true,
+    "time": 6.3,
+    "zone_damage": 0.0,
+    "remaining_m": 4.3,
+    "nearest_m": 4.3,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "drop",
+    "seed": 75754,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      487.40704457380025,
+      -63.72520846548872,
+      2.2240704457380027
+    ],
+    "goal": [
+      468.13177903033977,
+      -18.534402656216074,
+      3.1246559734378394
+    ],
+    "success": true,
+    "time": 6.3,
+    "zone_damage": 0.0,
+    "remaining_m": 4.3,
+    "nearest_m": 4.3,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "drop",
+    "seed": 77355,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      -440.2388073410507,
+      -95.52769761459686,
+      -1.2219772753598777
+    ],
+    "goal": [
+      -498.90707334298276,
+      -92.35236254682333,
+      -5.720929266570172
+    ],
+    "success": false,
+    "time": 22.0,
+    "zone_damage": 0.0,
+    "remaining_m": 127.3,
+    "nearest_m": 58.8,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 77355,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      -440.2388073410507,
+      -95.52769761459686,
+      -1.2219772753598777
+    ],
+    "goal": [
+      -498.90707334298276,
+      -92.35236254682333,
+      -5.720929266570172
+    ],
+    "success": true,
+    "time": 6.9,
+    "zone_damage": 0.0,
+    "remaining_m": 3.4,
+    "nearest_m": 3.4,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "drop",
+    "seed": 77355,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      -440.2388073410507,
+      -95.52769761459686,
+      -1.2219772753598777
+    ],
+    "goal": [
+      -498.90707334298276,
+      -92.35236254682333,
+      -5.720929266570172
+    ],
+    "success": true,
+    "time": 6.9,
+    "zone_damage": 0.0,
+    "remaining_m": 3.4,
+    "nearest_m": 3.4,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "drop",
+    "seed": 78956,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      207.81462895911375,
+      34.87132689902654,
+      5.583860193029205
+    ],
+    "goal": [
+      219.9742443928004,
+      98.33124363516228,
+      4.8333124363516236
+    ],
+    "success": false,
+    "time": 22.0,
+    "zone_damage": 0.0,
+    "remaining_m": 111.3,
+    "nearest_m": 64.6,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 78956,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      207.81462895911375,
+      34.87132689902654,
+      5.583860193029205
+    ],
+    "goal": [
+      219.9742443928004,
+      98.33124363516228,
+      4.8333124363516236
+    ],
+    "success": true,
+    "time": 7.4,
+    "zone_damage": 0.0,
+    "remaining_m": 3.6,
+    "nearest_m": 3.6,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "drop",
+    "seed": 78956,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      207.81462895911375,
+      34.87132689902654,
+      5.583860193029205
+    ],
+    "goal": [
+      219.9742443928004,
+      98.33124363516228,
+      4.8333124363516236
+    ],
+    "success": true,
+    "time": 7.4,
+    "zone_damage": 0.0,
+    "remaining_m": 3.4,
+    "nearest_m": 3.4,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "drop",
+    "seed": 80557,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      359.7667656353509,
+      170.8960766272404,
+      4.20779387964889
+    ],
+    "goal": [
+      388.8142382153389,
+      200.6674056878089,
+      4.486329105575314
+    ],
+    "success": false,
+    "time": 22.0,
+    "zone_damage": 0.0,
+    "remaining_m": 86.1,
+    "nearest_m": 41.6,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 80557,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      359.7667656353509,
+      170.8960766272404,
+      4.20779387964889
+    ],
+    "goal": [
+      388.8142382153389,
+      200.6674056878089,
+      4.486329105575314
+    ],
+    "success": true,
+    "time": 6.0,
+    "zone_damage": 0.0,
+    "remaining_m": 3.4,
+    "nearest_m": 3.4,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "drop",
+    "seed": 80557,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      359.7667656353509,
+      170.8960766272404,
+      4.20779387964889
+    ],
+    "goal": [
+      388.8142382153389,
+      200.6674056878089,
+      4.486329105575314
+    ],
+    "success": true,
+    "time": 6.0,
+    "zone_damage": 0.0,
+    "remaining_m": 3.7,
+    "nearest_m": 3.7,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "drop",
+    "seed": 82158,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      121.03087255470689,
+      -222.15010088717221,
+      1.635493252269948
+    ],
+    "goal": [
+      120.1073170197667,
+      -276.20747406228054,
+      -0.535850511680088
+    ],
+    "success": false,
+    "time": 22.0,
+    "zone_damage": 0.0,
+    "remaining_m": 70.0,
+    "nearest_m": 47.9,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 82158,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      121.03087255470689,
+      -222.15010088717221,
+      1.635493252269948
+    ],
+    "goal": [
+      120.1073170197667,
+      -276.20747406228054,
+      -0.535850511680088
+    ],
+    "success": true,
+    "time": 6.5,
+    "zone_damage": 0.0,
+    "remaining_m": 3.4,
+    "nearest_m": 3.4,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "drop",
+    "seed": 82158,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      121.03087255470689,
+      -222.15010088717221,
+      1.635493252269948
+    ],
+    "goal": [
+      120.1073170197667,
+      -276.20747406228054,
+      -0.535850511680088
+    ],
+    "success": true,
+    "time": 6.5,
+    "zone_damage": 0.0,
+    "remaining_m": 3.4,
+    "nearest_m": 3.4,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "drop",
+    "seed": 83759,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      -23.71266133630843,
+      314.21263148660177,
+      -1.547874282128114
+    ],
+    "goal": [
+      -7.608422206766203,
+      263.389406887684,
+      -0.5940731536653647
+    ],
+    "success": false,
+    "time": 22.0,
+    "zone_damage": 0.0,
+    "remaining_m": 66.6,
+    "nearest_m": 53.3,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 83759,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      -23.71266133630843,
+      314.21263148660177,
+      -1.547874282128114
+    ],
+    "goal": [
+      -7.608422206766203,
+      263.389406887684,
+      -0.5940731536653647
+    ],
+    "success": true,
+    "time": 6.5,
+    "zone_damage": 0.0,
+    "remaining_m": 3.9,
+    "nearest_m": 3.9,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "drop",
+    "seed": 83759,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      -23.71266133630843,
+      314.21263148660177,
+      -1.547874282128114
+    ],
+    "goal": [
+      -7.608422206766203,
+      263.389406887684,
+      -0.5940731536653647
+    ],
+    "success": true,
+    "time": 6.8,
+    "zone_damage": 0.0,
+    "remaining_m": 3.3,
+    "nearest_m": 3.3,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "drop",
+    "seed": 85360,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      490.5961204224918,
+      -193.42757656767776,
+      2.8885515313535555
+    ],
+    "goal": [
+      464.1046074636375,
+      -157.31268517439855,
+      2.0641729263803597
+    ],
+    "success": false,
+    "time": 22.0,
+    "zone_damage": 0.0,
+    "remaining_m": 56.1,
+    "nearest_m": 34.2,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 85360,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      490.5961204224918,
+      -193.42757656767776,
+      2.8885515313535555
+    ],
+    "goal": [
+      464.1046074636375,
+      -157.31268517439855,
+      2.0641729263803597
+    ],
+    "success": true,
+    "time": 6.0,
+    "zone_damage": 0.0,
+    "remaining_m": 3.9,
+    "nearest_m": 3.9,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "drop",
+    "seed": 85360,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      490.5961204224918,
+      -193.42757656767776,
+      2.8885515313535555
+    ],
+    "goal": [
+      464.1046074636375,
+      -157.31268517439855,
+      2.0641729263803597
+    ],
+    "success": true,
+    "time": 6.0,
+    "zone_damage": 0.0,
+    "remaining_m": 3.8,
+    "nearest_m": 3.8,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "drop",
+    "seed": 86961,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      459.4493513191428,
+      118.25858450637548,
+      4.4491781628877725
+    ],
+    "goal": [
+      492.70171262330706,
+      171.53403957998236,
+      4.474289017100614
+    ],
+    "success": false,
+    "time": 22.0,
+    "zone_damage": 0.0,
+    "remaining_m": 102.4,
+    "nearest_m": 62.8,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 86961,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      459.4493513191428,
+      118.25858450637548,
+      4.4491781628877725
+    ],
+    "goal": [
+      492.70171262330706,
+      171.53403957998236,
+      4.474289017100614
+    ],
+    "success": true,
+    "time": 9.5,
+    "zone_damage": 0.0,
+    "remaining_m": 3.3,
+    "nearest_m": 3.3,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "drop",
+    "seed": 86961,
+    "split": "holdout",
+    "blocked": true,
+    "start": [
+      459.4493513191428,
+      118.25858450637548,
+      4.4491781628877725
+    ],
+    "goal": [
+      492.70171262330706,
+      171.53403957998236,
+      4.474289017100614
+    ],
+    "success": false,
+    "time": 22.0,
+    "zone_damage": 0.0,
+    "remaining_m": 34.9,
+    "nearest_m": 34.9,
+    "target_entry_s": null
+  },
+  {
+    "policy": "starter",
+    "family": "drop",
+    "seed": 88562,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      -157.14733938644008,
+      276.03806414434854,
+      -4.810380641443485
+    ],
+    "goal": [
+      -165.35614162624097,
+      234.49174343986874,
+      -4.918643981863722
+    ],
+    "success": false,
+    "time": 22.0,
+    "zone_damage": 0.0,
+    "remaining_m": 96.7,
+    "nearest_m": 42.3,
+    "target_entry_s": null
+  },
+  {
+    "policy": "pilot",
+    "family": "drop",
+    "seed": 88562,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      -157.14733938644008,
+      276.03806414434854,
+      -4.810380641443485
+    ],
+    "goal": [
+      -165.35614162624097,
+      234.49174343986874,
+      -4.918643981863722
+    ],
+    "success": true,
+    "time": 5.9,
+    "zone_damage": 0.0,
+    "remaining_m": 3.5,
+    "nearest_m": 3.5,
+    "target_entry_s": null
+  },
+  {
+    "policy": "no-route",
+    "family": "drop",
+    "seed": 88562,
+    "split": "holdout",
+    "blocked": false,
+    "start": [
+      -157.14733938644008,
+      276.03806414434854,
+      -4.810380641443485
+    ],
+    "goal": [
+      -165.35614162624097,
+      234.49174343986874,
+      -4.918643981863722
+    ],
+    "success": true,
+    "time": 5.9,
+    "zone_damage": 0.0,
+    "remaining_m": 3.3,
+    "nearest_m": 3.3,
+    "target_entry_s": null
+  }
+]

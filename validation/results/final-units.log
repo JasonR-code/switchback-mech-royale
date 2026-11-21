@@ -1,0 +1,42 @@
+test_ballistic_lifetime_pitch_and_unreachable (test_combat.CombatTests.test_ballistic_lifetime_pitch_and_unreachable) ... ok
+test_common_random_shots (test_combat.CombatTests.test_common_random_shots) ... ok
+test_cover_and_clear_high_arc (test_combat.CombatTests.test_cover_and_clear_high_arc) ... ok
+test_cover_upper_body (test_combat.CombatTests.test_cover_upper_body) ... ok
+test_elimination_and_signed_pitch (test_combat.CombatTests.test_elimination_and_signed_pitch) ... ok
+test_gun_and_lightning_share_aim (test_combat.CombatTests.test_gun_and_lightning_share_aim) ... ok
+test_laser_charge_release_and_cookoff (test_combat.CombatTests.test_laser_charge_release_and_cookoff) ... ok
+test_mortar_proximity_and_wall_by_tube (test_combat.CombatTests.test_mortar_proximity_and_wall_by_tube) ... ok
+test_reload_and_regeneration (test_combat.CombatTests.test_reload_and_regeneration) ... ok
+test_slew_and_wrap (test_combat.CombatTests.test_slew_and_wrap) ... ok
+test_bridge_height (test_geometry.GeometryTests.test_bridge_height) ... ok
+test_ground_and_hole (test_geometry.GeometryTests.test_ground_and_hole) ... ok
+test_capture_for_four_seconds_under_observation (test_motion.MotionTests.test_capture_for_four_seconds_under_observation) ... ok
+test_climb_commits_and_does_not_jump_with_no_fuel (test_motion.MotionTests.test_climb_commits_and_does_not_jump_with_no_fuel) ... ok
+test_hazard_ablation (test_motion.MotionTests.test_hazard_ablation) ... ok
+test_mortar_departure_from_stationary_goal (test_motion.MotionTests.test_mortar_departure_from_stationary_goal) ... ok
+test_movement_preserves_corridor (test_motion.MotionTests.test_movement_preserves_corridor) ... ok
+test_open_progress_and_energy (test_motion.MotionTests.test_open_progress_and_energy) ... ok
+test_orbit_instead_of_standing_at_an_exposed_anchor (test_motion.MotionTests.test_orbit_instead_of_standing_at_an_exposed_anchor) ... ok
+test_shots_too_high_have_no_influence (test_motion.MotionTests.test_shots_too_high_have_no_influence) ... ok
+test_stuck_approach_recovers_without_leaving_capture_ring (test_motion.MotionTests.test_stuck_approach_recovers_without_leaving_capture_ring) ... ok
+test_missing_map_and_changing_slots (test_pilot.PilotTests.test_missing_map_and_changing_slots) ... ok
+test_official_map_loaded (test_pilot.PilotTests.test_official_map_loaded) ... ok
+test_optional_fields_and_balance_changes (test_pilot.PilotTests.test_optional_fields_and_balance_changes) ... ok
+test_partial_observations (test_pilot.PilotTests.test_partial_observations) ... ok
+test_random_optional_shapes (test_pilot.PilotTests.test_random_optional_shapes) ... ok
+test_cube_and_first_upgrade (test_strategy.StrategyTests.test_cube_and_first_upgrade) ... ok
+test_first_pickup_range_vertical_and_locked_laser (test_strategy.StrategyTests.test_first_pickup_range_vertical_and_locked_laser) ... ok
+test_hidden_contact_pressure_and_fading (test_strategy.StrategyTests.test_hidden_contact_pressure_and_fading) ... ok
+test_new_circle_from_live_state_once (test_strategy.StrategyTests.test_new_circle_from_live_state_once) ... ok
+test_resource_heights_roundtrip (test_strategy.StrategyTests.test_resource_heights_roundtrip) ... ok
+test_resource_memory_out_of_view (test_strategy.StrategyTests.test_resource_memory_out_of_view) ... ok
+test_single_contact_focus_group_fallback (test_strategy.StrategyTests.test_single_contact_focus_group_fallback) ... ok
+test_step_sound_sweep_and_damage_face (test_strategy.StrategyTests.test_step_sound_sweep_and_damage_face) ... ok
+test_uncontested_drop_can_repair (test_strategy.StrategyTests.test_uncontested_drop_can_repair) ... ok
+test_wounded_mech_breaks_sight (test_strategy.StrategyTests.test_wounded_mech_breaks_sight) ... ok
+test_zone_urgency_refuses_bait (test_strategy.StrategyTests.test_zone_urgency_refuses_bait) ... ok
+
+----------------------------------------------------------------------
+Ran 37 tests in 0.666s
+
+OK
