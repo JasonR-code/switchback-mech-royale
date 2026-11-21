@@ -165,7 +165,9 @@ class Pilot:
                                  "capture_radius": 0, "lane_cover": True}
             travel = self.motion.act(obs, self.arena, shelter[:2], movement)
         else:
-            travel = self.motion.act(obs, self.arena, waypoint, intent)
+            directions = () if intent['urgent'] else self.lane_cover.incoming_guns(obs)
+            movement = intent | {"incoming_guns": directions} if directions else intent
+            travel = self.motion.act(obs, self.arena, waypoint, movement)
         attack = self.combat.act(obs, self.arena, intent)
         return {"tick": tick, **travel, **attack, **intent.get("actions", {})}
 

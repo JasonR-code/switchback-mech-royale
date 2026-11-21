@@ -23,8 +23,8 @@ class LaneCover:
                     or type(source) not in (int, float) or type(angle) not in (float, int)
                     or not isfinite(angle)):
                 continue
-            self.hits[source] = (t, angle, tuple(obs['self']['pos'][:2]))
-        for source, (when, _, _) in tuple(self.hits.items()):
+            self.hits[source] = (t, angle, tuple(obs['self']['pos'][:2]), event['weapon'])
+        for source, (when, _, _, _) in tuple(self.hits.items()):
             if not 0 <= t-when <= 3.:
                 del self.hits[source]
 
@@ -43,6 +43,19 @@ class LaneCover:
             return self.destination
         return None
 
+    def incoming_guns(self, obs):
+        if len(self.hits) < 2:
+            return ()
+        p = obs['self']['pos']
+        reported = {e['id'] for e in obs['mechs']}
+        directions = []
+        missing = False
+        for ident, (when,yaw,hit_pos,weapon) in self.hits.items():
+            if weapon == 'gun' and obs['t']-when <= 1.2 and dist(p[:2],hit_pos) <= 16:
+                directions.append((-sin(yaw),cos(yaw)))
+                missing |= ident not in reported
+        return tuple(directions) if missing else ()
+
     def _find(self, obs, arena, normal):
         me, zone = obs['self'], obs['zone']
         p = me['pos']
@@ -56,7 +69,7 @@ class LaneCover:
                 x,y,z = enemy['pos']
                 eyes.append((x,y,z+7*(1+.05*enemy.get('cubes',0))))
             else:
-                when, yaw, hit_pos = self.hits[ident]
+                when, yaw, hit_pos, _ = self.hits[ident]
                 if obs['t']-when <= 1.5 and dist(p[:2], hit_pos) <= 16:
                     # Probe nearby shielding across a small angular sector. A hit
                     # bearing supplies no range or exact unseen shooter position.

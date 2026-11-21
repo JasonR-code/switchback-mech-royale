@@ -180,7 +180,8 @@ class Motion:
         shooters = self._shooters(obs, arena, stats)
         contact = any(s[5] and s[0] > .14 for s in shooters)
         hazard = bool(lines or blasts)
-        under_fire = hazard or contact
+        incoming = intent.get('incoming_guns', ())
+        under_fire = hazard or contact or bool(incoming)
         if now >= self.turn_at:
             self.side *= -1
             self.turn_at = now + self.random.uniform(.8, 1.65)
@@ -275,6 +276,10 @@ class Motion:
                         score += w * (8.5 + 7*pressure)
                     elif not exposed and visible:
                         score -= w * (7 + 6*pressure)
+            if incoming:
+                # Only activated after distinct attackers hit, including a gun
+                # missing from the current mech list. Protect the worst crossing angle.
+                score += 1.6 * min(abs(ox*nx + oy*ny) for nx,ny in incoming)
             for _, t, px, py, pz, pvx, pvy, pvz, gravity, body, weight in lines:
                 ox1, oy1 = displacement(vx, vy, ux, uy, ramp, t)
                 # Refine the closest point once with the candidate's changed lateral speed.

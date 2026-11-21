@@ -24,6 +24,7 @@ class Monitor(Campaign):
         self.last_hit = {}
         self.second_at = None
         self.pressure_frames = self.diverted = self.unseen_frames = 0
+        self.bearing_frames = 0
         self.exposed_waypoints = self.toward_extra = 0
         self.open_lanes = set()
         self.details = []
@@ -46,6 +47,7 @@ class Monitor(Campaign):
                 if self.second_at is None:
                     self.second_at = t
                 self.pressure_frames += 1
+                self.bearing_frames += bool(intent.get('incoming_guns'))
                 self.diverted += bool(intent.get('lane_cover'))
                 reported = {e['id'] for e in obs['mechs']}
                 self.unseen_frames += bool(set(ids)-reported)
@@ -97,7 +99,7 @@ class Monitor(Campaign):
         life=None if t is None else (12 if row['survived'] else min(12, max(0,self.time-t)))
         row.update(second_at=t, post12_alive=life, post12_damage=round(self.post_damage,2),
                    post12_crossfire=round(self.post_crossfire,2), active_frames=self.pressure_frames,
-                   missing_frames=self.unseen_frames, cover_frames=self.diverted)
+                   missing_frames=self.unseen_frames, cover_frames=self.diverted, bearing_frames=self.bearing_frames)
         if args.trace:
             row.update(waypoint_two=self.exposed_waypoints,waypoint_extra=self.toward_extra)
         return row
