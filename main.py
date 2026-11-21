@@ -7,6 +7,7 @@ import mechfight
 from arena import Arena
 from combat import Combat
 from motion import Motion
+from lane_cover import LaneCover
 from strategy import Strategy
 
 
@@ -48,6 +49,7 @@ class Pilot:
         self.slot = hello.get("slot", 0)
         self.arena = Arena((hello.get("map") or {}).get("dir", "/arena"), self.config)
         self.strategy = Strategy(self.config, seed)
+        self.lane_cover = LaneCover()
         self.motion = Motion(self.config, seed)
         self.combat = Combat(self.config)
 
@@ -157,7 +159,13 @@ class Pilot:
             self.arena.climb_height = None
         else:
             waypoint = self.arena.waypoint(pos, goal, intent.get("threats", ()))
-        travel = self.motion.act(obs, self.arena, waypoint, intent)
+        shelter = self.lane_cover.waypoint(obs, self.arena, intent, waypoint)
+        if shelter:
+            movement = intent | {"goal": shelter, "escape": True, "hold": False,
+                                 "capture_radius": 0, "lane_cover": True}
+            travel = self.motion.act(obs, self.arena, shelter[:2], movement)
+        else:
+            travel = self.motion.act(obs, self.arena, waypoint, intent)
         attack = self.combat.act(obs, self.arena, intent)
         return {"tick": tick, **travel, **attack, **intent.get("actions", {})}
 
