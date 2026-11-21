@@ -23,6 +23,7 @@ class Motion:
         self.config = config
         self.random = random.Random(seed)
         self.turn_at = -1.0
+        self.incoming_hits = {}
         self.side = self.random.choice((-1.0, 1.0))
         self.boosting = False
         self.climb_until = -1.0
@@ -81,6 +82,32 @@ class Motion:
         lines.sort()
         blasts.sort()
         return lines[:8], blasts[:4]
+
+    def incoming_guns(self, obs):
+        """Return crossing directions supported by recent hits from distinct attackers."""
+        t, pos = obs['t'], obs['self']['pos']
+        for event in obs['events']:
+            if event.get('type') == 'kill':
+                self.incoming_hits.pop(event.get('target'), None)
+                continue
+            ident, angle, weapon = event.get('by'), event.get('bearing'), event.get('weapon')
+            if (event.get('type') == 'damaged' and weapon in ('gun', 'laser', 'lightning')
+                    and type(ident) in (int, float) and type(angle) in (int, float)
+                    and math.isfinite(angle)):
+                self.incoming_hits[ident] = (t, angle, tuple(pos[:2]), weapon)
+        for ident, (when, _, _, _) in tuple(self.incoming_hits.items()):
+            if not 0 <= t-when <= 3.:
+                del self.incoming_hits[ident]
+        if len(self.incoming_hits) < 2:
+            return ()
+        reported = {e['id'] for e in obs['mechs']}
+        directions = []
+        missing = False
+        for ident, (when, yaw, hit_pos, weapon) in self.incoming_hits.items():
+            if weapon == 'gun' and t-when <= 1.2 and math.dist(pos[:2],hit_pos) <= 16:
+                directions.append((-math.sin(yaw),math.cos(yaw)))
+                missing |= ident not in reported
+        return tuple(directions) if missing or len(directions) >= 2 else ()
 
     def _shooters(self, obs, arena, stats):
         x, y, z = obs['self']['pos']
@@ -277,8 +304,7 @@ class Motion:
                     elif not exposed and visible:
                         score -= w * (7 + 6*pressure)
             if incoming:
-                # Only activated after distinct attackers hit, including a gun
-                # missing from the current mech list. Protect the worst crossing angle.
+                # Recent fire from distinct attackers. Protect the worst crossing angle.
                 score += 1.6 * min(abs(ox*nx + oy*ny) for nx,ny in incoming)
             for _, t, px, py, pz, pvx, pvy, pvz, gravity, body, weight in lines:
                 ox1, oy1 = displacement(vx, vy, ux, uy, ramp, t)
