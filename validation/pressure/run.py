@@ -30,13 +30,17 @@ class Monitor(Campaign):
         self.details = []
         self.impacts = []
         self.reported = set()
+        self.impact_times = {}
+        self.second_impact = None
+        self.unreported_damage = 0.
+        self.unreported_hits = 0
+        self.damage_before_60 = 0.
         self.pressure_hits = self.post_damage = self.post_crossfire = 0
         move = self.pilot.motion.act
 
         def measure(obs, arena, waypoint, intent):
             t, me = obs['t'], obs['self']
-            if args.trace:
-                self.reported = {e['id'] for e in obs['mechs']}
+            self.reported = {e['id'] for e in obs['mechs']}
             for event in obs['events']:
                 if event['type'] == 'damaged' and event.get('by') is not None:
                     self.last_hit[event['by']] = t
@@ -82,6 +86,18 @@ class Monitor(Campaign):
     def damage_actor(self, source, target, amount, bearing, kind):
         hp=self.me['hp']
         super().damage_actor(source,target,amount,bearing,kind)
+        if target == 0 and hp > 0:
+            ident = self.actors[source]['id']
+            lost = hp - self.me['hp']
+            if ident not in self.reported:
+                self.unreported_damage += lost
+                self.unreported_hits += 1
+            if self.time < 60:
+                self.damage_before_60 += lost
+            if (self.second_impact is None and
+                    any(i != ident and self.time - t <= 3 for i, t in self.impact_times.items())):
+                self.second_impact = self.time
+            self.impact_times[ident] = self.time
         if args.trace and target == 0 and hp > 0:
             vx,vy=self.me['vel'][:2]
             ident=self.actors[source]['id']
@@ -100,6 +116,11 @@ class Monitor(Campaign):
         row.update(second_at=t, post12_alive=life, post12_damage=round(self.post_damage,2),
                    post12_crossfire=round(self.post_crossfire,2), active_frames=self.pressure_frames,
                    missing_frames=self.unseen_frames, cover_frames=self.diverted, bearing_frames=self.bearing_frames)
+        second = self.second_impact
+        row.update(unreported_damage=round(self.unreported_damage,2), unreported_hits=self.unreported_hits,
+                   damage_before_60=round(self.damage_before_60,2), second_impact=second,
+                   impact12_alive=None if second is None else (12. if row['survived'] else
+                                  round(min(12.,max(0.,self.time-second)),3)))
         if args.trace:
             row.update(waypoint_two=self.exposed_waypoints,waypoint_extra=self.toward_extra)
         return row
