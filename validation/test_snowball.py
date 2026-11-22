@@ -65,49 +65,5 @@ class Spoils(unittest.TestCase):
         self.assertLess(math.dist(out["goal"][:2], (60, 0)), 1)
 
 
-class DuelHold(unittest.TestCase):
-    """At 40% HP the 4.85 rule (hp < .5 and pressure) retreats from any engaged rival."""
-    def setUp(self):
-        self.obs = observed()
-        self.obs["self"]["hp"] = 560
-        self.bot = Strategy({}, 6)
-
-    def plan(self):
-        return self.bot.plan(self.obs, Plane())
-
-    def test_lone_weaker_hunter_is_fought(self):
-        self.obs["mechs"] = [enemy(5, 90, 0, hp=500)]
-        self.assertFalse(self.plan()["escape"])
-
-    def test_lone_stronger_hunter_still_escapes(self):
-        self.obs["mechs"] = [enemy(5, 90, 0, hp=900)]
-        self.assertTrue(self.plan()["escape"])
-
-    def test_weaker_hunter_plus_second_engager_escapes(self):
-        self.obs["mechs"] = [enemy(5, 90, 0, hp=300), enemy(6, -120, 40)]
-        self.assertTrue(self.plan()["escape"])
-
-    def test_weaker_hunter_plus_bystander_is_fought(self):
-        self.obs["mechs"] = [enemy(5, 90, 0, hp=300), looking_away(6, -120, 40)]
-        self.assertFalse(self.plan()["escape"])
-
-    def test_below_floor_still_escapes(self):
-        self.obs["self"]["hp"] = 420          # 30% < DUEL_FLOOR
-        self.obs["mechs"] = [enemy(5, 90, 0, hp=200)]
-        self.assertTrue(self.plan()["escape"])
-
-    def test_late_game_and_switch_off_revert(self):
-        self.obs["mechs"] = [enemy(5, 90, 0, hp=500)]
-        self.obs["alive"] = 16 - strategy.SNOWBALL_UNTIL_DEAD
-        self.assertTrue(self.plan()["escape"])
-        old = strategy.DUEL_EDGE
-        try:
-            strategy.DUEL_EDGE = 0.
-            self.obs["alive"] = 16
-            self.assertTrue(Strategy({}, 6).plan(self.obs, Plane())["escape"])
-        finally:
-            strategy.DUEL_EDGE = old
-
-
 if __name__ == "__main__":
     unittest.main()

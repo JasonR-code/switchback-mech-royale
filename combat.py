@@ -210,6 +210,10 @@ def drifting(v, track, flight):
 
 REAR_WEIGHT = .25
 REAR_MARGIN = .14
+# Unseen shooter (strategy intent "glance"): keep its bearing within this of our aim
+# (view half-wedge 60 deg); never turn away from a rival this close to dying.
+GLANCE_KEEP = radians(40)
+GLANCE_FINISH_HP, GLANCE_FINISH_FRAC = 300., .22
 
 
 def rear_exposure(threats, yaw):
@@ -644,6 +648,17 @@ class Combat:
         else:
             cmd = [wrap(intent.get('scan', actual[0])), 0.]
             self.focus = None
+        glance = intent.get('glance')
+        if glance is not None and best:
+            obj = best.target.obj
+            hp = obj.get('hp', 1e9)
+            finishing = obj.get('kind') == 'mech' and hp <= max(GLANCE_FINISH_HP, GLANCE_FINISH_FRAC*obj.get('max_hp', 1400))
+            if not finishing:
+                # Keep the hidden shooter's bearing inside the view wedge; fire at
+                # the current target only while it also fits in that wedge.
+                yaw = wrap(glance + clamp(wrap(best.yaw - glance), -GLANCE_KEEP, GLANCE_KEEP))
+                if abs(wrap(yaw - best.yaw)) > 1e-6:
+                    cmd = [yaw, 0.]
         fire = [False, False]
         reload_gun = False
         for slot, w in enumerate(inventory):

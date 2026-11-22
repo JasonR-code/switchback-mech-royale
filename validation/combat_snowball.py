@@ -31,8 +31,11 @@ TIERS = {'easy': (.06, .3, .1), 'medium': (.035, .55, .3), 'hard': (.02, .8, .5)
 
 
 class Snowball(Squad):
-    def __init__(self, Combat, cfg, seed, pilot, duration=120., scale=1., provoke=True):
+    def __init__(self, Combat, cfg, seed, pilot, duration=120., scale=1., provoke=True, fov=False):
         super().__init__(Combat, cfg, seed, 'still', duration=duration, pilot=pilot)
+        # fov: protocol section 8 vision (120 deg wedge on our aim, 45 m proximity, 5 s tracking memory).
+        self.fov, self.seen_t = fov, {}
+        self.hidden_dmg, self.hidden_events = 0., []
         rng = random.Random(seed*17 + 3)
         self.scale, self.provoke = scale, provoke
         mech = cfg['mech']
@@ -71,6 +74,19 @@ class Snowball(Squad):
         obs = super().observation(tick)
         me = self.me.pos
         obs['mechs'] = [m for m in obs['mechs'] if math.hypot(m['pos'][0]-me[0], m['pos'][1]-me[1]) <= 200]
+        if self.fov:
+            vision = self.cfg.get('vision', {})
+            half = math.radians(vision.get('fov_deg', 120))/2
+            near, memory = vision.get('near_range', 45), vision.get('memory_s', 5)
+            kept = []
+            for m in obs['mechs']:
+                d = math.hypot(m['pos'][0]-me[0], m['pos'][1]-me[1])
+                yaw = math.atan2(m['pos'][1]-me[1], m['pos'][0]-me[0])
+                if d <= near or abs(wrap(yaw - self.aim[0])) <= half:
+                    self.seen_t[m['id']] = self.t
+                if self.t - self.seen_t.get(m['id'], -1e9) <= memory:
+                    kept.append(m)
+            obs['mechs'] = kept
         obs['self'].update(hp=max(1., self.hp), max_hp=self.max_hp, cubes=self.cube_count)
         obs['cubes'] = [dict(id=c[0], pos=list(c[1])) for c in self.cube_items if math.dist(c[1][:2], me[:2]) <= 200]
         obs['alive'] = 16 - self.stats['kills']
@@ -98,7 +114,11 @@ class Snowball(Squad):
 
     def hurt_me(self, r, amount, weapon, source):
         amount *= self.scale
+        if self.fov and self.t - self.seen_t.get(r.id, -1e9) > self.cfg.get('vision', {}).get('memory_s', 5):
+            self.hidden_events.append((round(self.t, 2), r.id, amount))
         super().hurt_me(r, amount, weapon, source)
+        if self.fov and self.hidden_events and self.hidden_events[-1][0] == round(self.t, 2) and self.hidden_events[-1][1] == r.id:
+            self.hidden_dmg += self.events[-1]['amount']
         self.hp -= amount*(1.5 if self.events[-1].get('rear') else 1.)
         self.quiet_since = self.t
 
@@ -154,7 +174,8 @@ class Snowball(Squad):
         out.update(death=round(self.t, 2) if self.hp <= 0 else None, cubes=self.cube_count,
                    travel=round(self.travel, 1), end_hp=round(max(0., self.hp), 1),
                    death_60=self.hp <= 0 and self.t <= 60,
-                   outlasted=self.stats['kills'],
+                   outlasted=self.stats['kills'], hidden_taken=round(self.hidden_dmg, 1),
+                   hidden_hits=len(self.hidden_events),
                    abandoned=sum(1 for r in self.rivals if r.alive and r.hp < 1400*.35 or (r.alive and r.role == 'withdrawn')))
         for k in ('dealt', 'taken', 'rear'):
             out[k] = round(out[k], 1)
@@ -174,6 +195,7 @@ def main():
     p.add_argument('--json', type=Path)
     p.add_argument('--rival-damage', type=float, default=1., help='scale on damage rivals deal (stand-in for cover)')
     p.add_argument('--no-provoke', action='store_true', help='rivals we shoot do not start hunting')
+    p.add_argument('--fov', action='store_true', help='protocol vision: 120 deg wedge, 45 m proximity, 5 s memory')
     a = p.parse_args()
     sys.path.insert(0, str(a.bot_dir.resolve()))
     from combat import Combat
@@ -183,7 +205,7 @@ def main():
     for seed in cases(a.split, a.cases):
         pilot = Pilot(dict(type='hello', slot=0, seed=seed, config=cfg, map=dict(dir=str(a.bot_dir/'no-map'))))
         row = dict(seed=seed)
-        row.update(Snowball(Combat, cfg, seed, pilot, scale=a.rival_damage, provoke=not a.no_provoke).run())
+        row.update(Snowball(Combat, cfg, seed, pilot, scale=a.rival_damage, provoke=not a.no_provoke, fov=a.fov).run())
         out.append(row)
     if a.json:
         a.json.write_text(json.dumps(out))

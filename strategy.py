@@ -33,9 +33,12 @@ FINISH_RANGE = 75
 FINISH_FRAC, FINISH_HP = 0., 0    # off: finish commitment added nothing measurable
 HUNT_FRAC, HUNT_AGE, HUNT_RANGE = -1., 8., 170.   # off: hunting rarely triggered
 SNOWBALL_UNTIL_DEAD, SNOWBALL_UNTIL_T = 8, 300.
-# Duel hold: with exactly one rival engaging us, a retreat does not regenerate (it pursues),
-# so keep fighting while that rival has no more HP left than we do. 0 disables.
-DUEL_EDGE, DUEL_FLOOR = 1., .35
+# Unseen shooter: an attacker we are not shown (outside the 120 deg view wedge, in
+# canopy, never seen) that hits us repeatedly. Combat turns just far enough to put
+# its bearing in view (revealing it, and facing it with front armor).
+UNSEEN = True
+UNSEEN_WINDOW, UNSEEN_HITS, UNSEEN_DAMAGE, UNSEEN_HOLD = 3., 2, 150., 2.5
+UNSEEN_THREAT = False     # also count it as an engaging rival in the escape rules
 
 
 class Strategy:
@@ -57,6 +60,7 @@ class Strategy:
         self.rivals = {}
         self.spoils = []
         self.hit_by = {}
+        self.unseen_hits = []
 
     def _remember(self, obs):
         t, me = obs["t"], obs["self"]
@@ -91,10 +95,31 @@ class Strategy:
                 self.last_contact = t
             if typ == "damaged" and event.get("weapon") != "zone":
                 self.last_attacked = t
+                by, bearing = event.get("by"), event.get("bearing")
+                if (by is not None and bearing is not None and
+                        not any(m.get("id") == by for m in obs.get("mechs", ()))):
+                    self.unseen_hits.append((t, by, bearing, event.get("amount", 0) or 0))
                 if event.get("by") is not None:
                     self.hit_by[event["by"]] = t
                 if event.get("bearing") is not None:
                     self.bearing, self.bearing_time = event["bearing"], t
+
+    def _unseen(self, obs):
+        """Bearing of a credible repeated attacker we are not shown, or None."""
+        t = obs["t"]
+        self.unseen_hits = [h for h in self.unseen_hits if t-h[0] <= UNSEEN_WINDOW]
+        reported = {m.get("id") for m in obs.get("mechs", ())}
+        best = None
+        for by in {h[1] for h in self.unseen_hits}:
+            if by in reported:
+                continue
+            hits = [h for h in self.unseen_hits if h[1] == by]
+            total = sum(h[3] for h in hits)
+            last = max(hits)
+            if (len(hits) >= UNSEEN_HITS or total >= UNSEEN_DAMAGE) and t-last[0] <= UNSEEN_HOLD:
+                if best is None or total > best[0]:
+                    best = (total, last[2])
+        return best and best[1]
 
     def _perceive(self, obs, arena):
         t, me = obs["t"], obs["self"]
@@ -510,6 +535,10 @@ class Strategy:
         # Early on the squad sends one hunter at a time; a visible rival looking
         # elsewhere is not a second firing angle. Count only rivals engaging us.
         threats = [c for c in visible if self._engaging(c, p, t)] if snowball else visible
+        glance = self._unseen(obs) if UNSEEN else None
+        if glance is not None and UNSEEN_THREAT:
+            # A verified hidden firing angle is a second engaging rival.
+            threats = threats + [(.6, p, 0, True, None)]
         # A lone exposed opponent is a reasonable fight at high HP. Escalate
         # to retreat sooner when a second firing angle or an HP deficit appears.
         escape = bool((pressure > .82 and (len(threats)>1 or hp<.65)) or
@@ -517,11 +546,6 @@ class Strategy:
                       (len(threats)>1 and hp < .7 and pressure > .55))
         aimed = sum(c[0] > .26 for c in threats)
         escape = escape or aimed >= 2
-        if snowball and DUEL_EDGE > 0 and escape and len(threats) == 1 and threats[0][4] and hp >= DUEL_FLOOR:
-            # One engaging rival, nobody else turning on us: a retreat from a pursuer
-            # cannot regenerate, so hold the fight while it has no more HP left than us.
-            if threats[0][4].get("hp", 1e9) <= DUEL_EDGE*me["hp"]:
-                escape = False
         finishing = None
         if snowball and len(visible) == 1 and visible[0][4] and hp >= .3:
             e = visible[0][4]
@@ -592,7 +616,10 @@ class Strategy:
         else:
             # A complete turn observes loot behind spawn and refreshes the FOV while holding.
             scan = self.phase + t*1.42
+        if glance is not None:
+            scan = glance
         return {"goal":goal, "pressure":pressure, "focus":focus, "escape":escape, "scan":atan2(sin(scan),cos(scan)),
+                "glance":glance,
                 "urgent":urgent, "recover":recover, "hold":category == "capture" or (category=="anchor" and not visible and distance(p,goal)<4),
                 "capture_radius":ring, "threats":[(ep[0],ep[1],weight) for weight,ep,_,_,_ in contacts],
                 "direct_escape":category=="withdraw", "actions":actions}
