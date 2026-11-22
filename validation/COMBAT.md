@@ -63,3 +63,43 @@ python validation/squad_compare.py  base_b.json b.json
 ```
 
 Raw result files are in `validation/results/combat/`.
+
+# Round 2 (after `aa40f9e` scored 4.63/15 in official practice)
+
+Baseline for this round: `aa40f9e`, tagged locally as `builders-practice-4.63-baseline`. A new untouched seed split, `--split fresh`, was added to both labs, because the holdout split helped choose the round-1 rear weight.
+
+## Interaction of the three 4.63 changes (remove one at a time; vs full 4.63)
+
+| Removed | Duel dmg/case (holdout / fresh) | Squad net, combat only (holdout / fresh) | Full-pilot dealt (holdout / fresh) |
+|---|---|---|---|
+| 1 launch timing | −26 / −22 (both significant) | −5 / −66 | −23 / −19 (both significant) |
+| 2 rear arc | 0 / 0 | −13 / **+51** | +2 / +3 (alive −0.03 s / −0.02 s) |
+| 3 shell drift | −6 / +3 | −49 / −62 (both significant) | −8 / −8 |
+
+Changes 1 and 3 help and don't conflict. Change 2 is neutral with the full pilot and inconsistent in the combat-only lab: it helps on holdout and hurts on fresh. It was left unchanged, since it was part of the officially scored version, but it is the first thing to drop if 4.63+ regresses.
+
+## Weakness found: the laser was almost never fired under pressure
+
+With the full pilot against 2–3 rivals, gun+laser was the worst loadout (636 damage dealt vs 651 for gun only), firing 0.2 beams per fight. The cause: while `intent.escape` or `intent.urgent` is set, the laser never starts a charge (charging halves walk speed) unless the target is within 48 m or the shot is lethal. While withdrawing, the existing release logic already fires at minimum charge (0.15 s), so the half-speed exposure per beam is short.
+
+**Change 4 (`LASER_RETURN_FIRE = 1`, `LASER_TRADE_RANGE = 160`).** While withdrawing, but not while zone-urgent, allow a charge against a mech that hit us within 1.8 s, or that is aiming at us (yaw error < 0.28 rad) within 160 m. Everything else is unchanged.
+
+Full-pilot squad lab, 320 cases per split, vs unchanged 4.63:
+
+| Split | Damage dealt | Damage taken | Time alive | Deaths |
+|---|---|---|---|---|
+| dev | +190 [+150, +234] | −6 [−13, +1] | +0.23 s [+0.10, +0.39] | 301 → 295 |
+| holdout | +194 [+152, +240] | −5 [−13, +2] | +0.15 s [+0.02, +0.29] | 300 → 298 |
+| fresh | +188 [+147, +231] | −11 [−21, −3] | +0.11 s [−0.01, +0.25] | 297 → 288 |
+
+The unrestricted variant (charge at any target while withdrawing) dealt slightly more damage but showed no gain in time alive (+0.09 to +0.11 s, CIs include 0), so the narrower rule was kept. The duel lab and the combat-only squad lab send no escape intent, so they are bit-identical to 4.63.
+
+**Main risk.** The labs have no cover. On the real map, a slower retreat toward cover could cost more than these labs show. The rule only applies to a rival that is already shooting at or aiming at us, and while withdrawing the beam releases at 0.15 s.
+
+## Checked and left alone
+
+Target switching (`switch_probe.py`): focus changes on 1.8% of decisions, about every 5.5 s. In 622 decisions with a rival at ≤250 HP in view, the bot never aimed elsewhere. No missed-elimination pattern was found in the labs.
+
+## Validation
+
+67 tests pass, except the 3 that need `geometry.so` (no compiler on this host). The 4 new laser tests were confirmed to fail with the rule disabled. Official `check.py` on host: PASS, 300/300, p99 0.5 ms. Dense timing: p50 1.46 ms, 0 over 50 ms. Docker and real-map tests: **not run** (unavailable on this host).

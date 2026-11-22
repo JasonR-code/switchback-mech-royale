@@ -376,14 +376,14 @@ class Squad:
 
 
 def cases(split, count):
-    base = 3301 if split == 'dev' else 91003
+    base = {'dev': 3301, 'holdout': 91003, 'fresh': 610009}[split]
     return [(base + 6271*i, OWN[i % 3]) for i in range(count)]
 
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--bot-dir', type=Path, required=True)
-    p.add_argument('--split', choices=('dev', 'holdout'), default='dev')
+    p.add_argument('--split', choices=('dev', 'holdout', 'fresh'), default='dev')
     p.add_argument('--cases', type=int, default=120)
     p.add_argument('--json', type=Path)
     p.add_argument('--pilot', action='store_true', help='drive our mech with the full main.Pilot (no map)')

@@ -378,7 +378,7 @@ class Duel:
 
 
 def cases(split, count, loadouts=LOADOUTS):
-    base = 1009 if split == 'dev' else 70001
+    base = {'dev': 1009, 'holdout': 70001, 'fresh': 523007}[split]
     rows = []
     for i in range(count):
         seed = base + 7919*i
@@ -390,7 +390,7 @@ def cases(split, count, loadouts=LOADOUTS):
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--bot-dir', type=Path, required=True)
-    p.add_argument('--split', choices=('dev', 'holdout'), default='dev')
+    p.add_argument('--split', choices=('dev', 'holdout', 'fresh'), default='dev')
     p.add_argument('--cases', type=int, default=120)
     p.add_argument('--json', type=Path)
     p.add_argument('--loadouts', nargs='+', choices=LOADOUTS, default=list(LOADOUTS))

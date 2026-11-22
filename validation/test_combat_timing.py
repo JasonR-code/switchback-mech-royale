@@ -88,5 +88,27 @@ class ShellDrift(unittest.TestCase):
         self.assertEqual(drifting((5., 1., 0.), None, 2.), (5., 1., 0.))
 
 
+class LaserWhileWithdrawing(unittest.TestCase):
+    def fire(self, foe_aim, **intent):
+        obs = observation('gun', 'laser', distance=110)
+        obs['mechs'][0]['aim'] = [foe_aim, 0]
+        return Combat(CFG).act(obs, Flat(), intent)['fire'][1]
+
+    def test_charges_at_rival_shooting_at_us(self):
+        self.assertTrue(self.fire(math.pi, escape=True))
+
+    def test_holds_charge_against_rival_looking_away(self):
+        self.assertFalse(self.fire(math.pi/2, escape=True))
+
+    def test_zone_urgency_still_blocks_charging(self):
+        self.assertFalse(self.fire(math.pi, escape=True, urgent=True))
+
+    def test_recent_attacker_counts_even_when_turned_away(self):
+        obs = observation('gun', 'laser', distance=110)
+        obs['mechs'][0]['aim'] = [math.pi/2, 0]
+        obs['events'] = [dict(type='damaged', by=1, amount=45, weapon='gun', bearing=0.)]
+        self.assertTrue(Combat(CFG).act(obs, Flat(), {'escape': True})['fire'][1])
+
+
 if __name__ == '__main__':
     unittest.main()

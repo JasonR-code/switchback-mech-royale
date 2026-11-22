@@ -208,6 +208,9 @@ def drifting(v, track, flight):
     return (v[0] + trust*(mx-v[0]), v[1] + trust*(my-v[1]), v[2])
 
 
+LASER_RETURN_FIRE = 1    # 0: never charge while withdrawing, 1: only at a rival shooting at us, 2: always
+LASER_TRADE_RANGE = 160.
+
 REAR_WEIGHT = .25
 REAR_MARGIN = .14
 
@@ -366,6 +369,16 @@ class Combat:
                 contacts.append(Contact(obj, kind, center, forecast, radius, height, d, weight, gun_velocity, drift))
         contacts.sort(key=lambda c: c.weight, reverse=True)
         return contacts
+
+    def returning_fire(self, target, origin, now):
+        """A mech that hit us recently, or is aiming at us within laser-trading range."""
+        if target.kind != 'mech' or target.distance > LASER_TRADE_RANGE:
+            return False
+        if now - self.incoming.get(target.obj.get('id'), -1e9) < 1.8:
+            return True
+        p = target.obj.get('pos') or ZERO
+        home = atan2(origin[1]-p[1], origin[0]-p[0])
+        return abs(wrap((target.obj.get('aim') or ZERO)[0] - home)) < .28
 
     def threats(self, obs, arena, contacts, muzzle):
         """(bearing, danger, front half-arc) for rivals able to hit us soon.
@@ -609,7 +622,13 @@ class Combat:
                         fraction_now = stats.get('min_frac', .35) + (1-stats.get('min_frac',.35))*frac
                         lethal = target.obj.get('hp', 1e5) <= damage*fraction_now*.93
                         mobile = intent.get('escape') or intent.get('urgent')
-                        if charge <= 0 and (arc_risk or (mobile and not lethal and target.distance > 48)):
+                        if charge <= 0 and mobile and not lethal and target.distance > 48:
+                            # While withdrawing, a half-speed charge is still worth it
+                            # against a rival already trading shots with us.
+                            if not (LASER_RETURN_FIRE and not intent.get('urgent') and
+                                    (LASER_RETURN_FIRE > 1 or self.returning_fire(target, origin, now))):
+                                continue
+                        if charge <= 0 and arc_risk:
                             continue
                         release = (charge >= max_charge-.005 or
                                    (charge >= stats.get('min_charge',.15) and
