@@ -5,6 +5,13 @@ import random
 HORIZON = 0.65
 ANGLES = [math.radians(a) for a in (0, 28, -28, 55, -55, 85, -85, 120, -120, 155, -155, 180)]
 ROTATIONS = [(math.cos(a), math.sin(a)) for a in ANGLES]
+# Laser release dodge. In the public recording the house laser, while charging, aims at
+# our position one observation earlier plus 0.3 s of our velocity, and releases about
+# 0.8-0.9 s after its charge first shows. The beam therefore lands ~0.2 s * our lateral
+# speed beside us: a hit while we slow or reverse, a miss at boost speed. While a visible
+# rival charges at us, keep the strafe direction and maximise lateral speed at release.
+LASER_DODGE = True
+DODGE_WEIGHT, DODGE_AIM_TOL, DODGE_RELEASE = 22., .1, .8
 
 
 def displacement(vx, vy, ux, uy, ramp, t):
@@ -31,6 +38,7 @@ class Motion:
         self.progress_sample = None
         self.recovery_until = -1.0
         self.next_recovery = 0.
+        self.charge_seen = {}
 
     def _hazards(self, obs, arena, stats, speed):
         x, y, z = obs['self']['pos']
@@ -108,6 +116,33 @@ class Motion:
                 directions.append((-math.sin(yaw),math.cos(yaw)))
                 missing |= ident not in reported
         return tuple(directions) if missing else ()
+
+    def _lasers(self, obs, arena, stats):
+        """(perpendicular unit vector, seconds to expected release) for charging lasers aimed at us."""
+        now = obs.get('t', 0.)
+        x, y, z = obs['self']['pos']
+        reach = self.config.get('weapons', {}).get('laser', {}).get('range', 280) + 10
+        charging = set()
+        result = []
+        for m in obs.get('mechs', ()):
+            if m.get('kind') != 'mech' or not m.get('charging'):
+                continue
+            charging.add(m.get('id'))
+            first = self.charge_seen.setdefault(m.get('id'), now)
+            ex, ey, ez = m['pos']
+            dx, dy = x - ex, y - ey
+            d = math.hypot(dx, dy)
+            if d < 1 or d > reach:
+                continue
+            if abs(math.atan2(math.sin((m.get('aim') or (0,))[0] - math.atan2(dy, dx)),
+                              math.cos((m.get('aim') or (0,))[0] - math.atan2(dy, dx)))) > DODGE_AIM_TOL:
+                continue
+            muzzle = (ex, ey, ez + self.config.get('mech', {}).get('muzzle_height', 7))
+            if not arena.clear(muzzle, (x, y, z + stats.get('height', 9) * .55)):
+                continue
+            result.append((-dy/d, dx/d, max(0., DODGE_RELEASE - (now - first))))
+        self.charge_seen = {k: v for k, v in self.charge_seen.items() if k in charging}
+        return result
 
     def _shooters(self, obs, arena, stats):
         x, y, z = obs['self']['pos']
@@ -209,6 +244,10 @@ class Motion:
         hazard = bool(lines or blasts)
         incoming = intent.get('incoming_guns', ())
         under_fire = hazard or contact or bool(incoming)
+        beams = self._lasers(obs, arena, stats) if LASER_DODGE else []
+        if beams:
+            # Do not flip the strafe direction (and pass through zero speed) before release.
+            self.turn_at = max(self.turn_at, now + .35)
         if now >= self.turn_at:
             self.side *= -1
             self.turn_at = now + self.random.uniform(.8, 1.65)
@@ -221,6 +260,8 @@ class Motion:
         can_run = grounded and (gd > 8 or under_fire) and (not capture or gd > capture + 2)
         self.boosting = can_run and energy > emax * (reserve if self.boosting else reuse)
         if hazard and energy > max(6, .13 * emax) and can_run:
+            self.boosting = True
+        if beams and grounded and energy > max(4, .06 * emax):
             self.boosting = True
         speed = run if self.boosting else walk
         if any(w and w.get('charge', 0) > 0 for w in me.get('weapons', ())):
@@ -266,7 +307,8 @@ class Motion:
                 # At a quiet anchor we can stand still. Once an opponent has a
                 # firing lane, move within a loose radius around the objective.
                 score = .14 * progress - max(0., after - 11.)
-            if not arena.can_move((x,y,z), (ex,ey,z), radius):
+            feasible = arena.can_move((x,y,z), (ex,ey,z), radius)
+            if not feasible:
                 # Near corners, inertia can project a blocked endpoint even when
                 # the new command is parallel to the wall. Test the steering direction.
                 tx, ty = x + mx * 2.4, y + my * 2.4
@@ -303,6 +345,15 @@ class Motion:
                         score += w * (8.5 + 7*pressure)
                     elif not exposed and visible:
                         score -= w * (7 + 6*pressure)
+            for px, py, eta in beams:
+                # Lateral speed when the beam is expected, given the acceleration limit.
+                # Only for moves the body can make; zone travel keeps priority.
+                if not feasible:
+                    break
+                tau = max(.1, eta)
+                f = min(1., tau / ramp)
+                lat = abs((vx + (ux-vx)*f) * px + (vy + (uy-vy)*f) * py)
+                score += DODGE_WEIGHT * (.33 if urgent else 1.) * min(1., lat / run)
             if incoming:
                 # Recent fire from distinct attackers. Protect the worst crossing angle.
                 score += 1.6 * min(abs(ox*nx + oy*ny) for nx,ny in incoming)

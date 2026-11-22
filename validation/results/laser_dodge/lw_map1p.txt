@@ -1,0 +1,8 @@
+## map x1 p
+laser hits 64 dmg 21420  rear hits 8 (12%), rear dmg 3780 = extra 1260 over front
+  warned                                  59   92.2% of hits
+  warned & aimed-at-us                    59   92.2% of hits
+  rear & warned                            3    4.7% of hits
+  rear & warned & turn fits in lead        2    3.1% of hits
+  rear & warned & focus elsewhere          3    4.7% of hits
+  warning lead s: median 0.90  p25 0.75

@@ -1,0 +1,8 @@
+## map x.5 p
+laser hits 124 dmg 20318  rear hits 10 (8%), rear dmg 2362 = extra 788 over front
+  warned                                 115   92.7% of hits
+  warned & aimed-at-us                   115   92.7% of hits
+  rear & warned                            4    3.2% of hits
+  rear & warned & turn fits in lead        4    3.2% of hits
+  rear & warned & focus elsewhere          3    2.4% of hits
+  warning lead s: median 0.90  p25 0.75

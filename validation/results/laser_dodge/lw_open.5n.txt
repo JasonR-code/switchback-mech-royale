@@ -1,0 +1,8 @@
+## open x.5 n
+laser hits 142 dmg 22995  rear hits 8 (6%), rear dmg 1890 = extra 630 over front
+  warned                                 112   78.9% of hits
+  warned & aimed-at-us                   112   78.9% of hits
+  rear & warned                            1    0.7% of hits
+  rear & warned & turn fits in lead        1    0.7% of hits
+  rear & warned & focus elsewhere          0    0.0% of hits
+  warning lead s: median 0.90  p25 0.80
