@@ -6,6 +6,7 @@ from pathlib import Path
 import mechfight
 from arena import Arena
 from combat import Combat
+from isolation import Isolation
 from motion import Motion
 from strategy import Strategy
 
@@ -50,6 +51,7 @@ class Pilot:
         self.strategy = Strategy(self.config, seed)
         self.motion = Motion(self.config, seed)
         self.combat = Combat(self.config)
+        self.isolation = Isolation()
 
     def _observation(self, source):
         obs = source.copy()
@@ -151,6 +153,9 @@ class Pilot:
         me = obs["self"]
         self.arena.set_body(me["stats"]["radius"], me["stats"]["height"])
         intent = self.strategy.plan(obs, self.arena)
+        point = self.isolation.choose(obs, self.arena, intent, self.combat.focus, self.combat.incoming)
+        if point is not None:
+            intent = intent | {"goal": point, "direct_escape": True, "hold": True}
         pos, goal = obs["self"]["pos"], intent["goal"]
         if intent.get("direct_escape") and self.arena.can_move(pos, goal):
             waypoint = goal[:2]
