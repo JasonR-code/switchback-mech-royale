@@ -228,11 +228,15 @@ class Motion:
         accel = max(1, stats.get('ground_accel', 58.5) if grounded else stats.get('air_accel', 12))
         height, radius = stats.get('height', 9), stats.get('radius', 2.5)
         dx, dy = norm(waypoint[0]-x, waypoint[1]-y)
-        if wd < .2:
+        if wd < .2 and (not needs_travel or wd < 1e-8):
             dx, dy = norm(goal[0]-x, goal[1]-y)
         if dx == dy == 0:
             dx = 1.0
         slowing = min(1., max(.09, wd / max(1.0, speed * .32)))
+        # An intermediate node can be less than a metre away. At the old
+        # minimum speed the forecast overshoots it and rewards standing still.
+        if wd <= 1.5 and needs_travel:
+            slowing = wd / max(1., speed * HORIZON)
         candidates = [(dx*c-dy*s, dy*c+dx*s) for c,s in ROTATIONS]
         candidates[0] = (dx * slowing, dy * slowing)
         candidates.append((0., 0.))

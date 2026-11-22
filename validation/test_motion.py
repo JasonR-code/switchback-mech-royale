@@ -165,6 +165,30 @@ def retreat_summary(motion_type, start, count, shooters):
 
 
 class MotionTests(unittest.TestCase):
+    def test_complete_close_waypoint_on_campus_route(self):
+        from arena import Arena
+        here = (-250.41168640285122, 72.46467722353198, -9.23)
+        goal = (-206.14335696105275, 19.771606351617177, -5.0714335696105275)
+        arena = Arena(HERE.parent / 'mechfight-kit/arena', {})
+        try:
+            self.assertTrue(arena.handle, arena.error)
+            arena.set_body(2.625, 9.45)
+            ctrl = Motion({}, 1)
+            obs = make_obs()
+            obs['self'].update(pos=list(here), stats={'radius':2.625, 'height':9.45})
+            for _ in range(30):
+                pos = obs['self']['pos']
+                waypoint = arena.waypoint(pos, goal)
+                if math.dist(pos[:2], waypoint) > 2:
+                    break
+                action = ctrl.act(obs, arena, waypoint, {'goal':goal, 'pressure':0})
+                for _ in range(2):
+                    advance(obs, action)
+            self.assertGreater(math.dist(obs['self']['pos'][:2], waypoint), 2)
+            self.assertTrue(arena.can_move(obs['self']['pos'], waypoint))
+        finally:
+            arena.close()
+
     def test_reaching_lane_exit_under_three_shooters(self):
         result = retreat_summary(Motion, 14110, 12, 3)
         self.assertEqual(result['arrived_alive'], result['cases'])
