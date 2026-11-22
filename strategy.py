@@ -39,6 +39,11 @@ SNOWBALL_UNTIL_DEAD, SNOWBALL_UNTIL_T = 8, 300.
 UNSEEN = True
 UNSEEN_WINDOW, UNSEEN_HITS, UNSEEN_DAMAGE, UNSEEN_HOLD = 3., 2, 150., 2.5
 UNSEEN_THREAT = False     # also count it as an engaging rival in the escape rules
+# Kill race: from our measured hits on a target and the damage we measurably take,
+# commit to that target (hold the escape, keep it focused) when it dies before we
+# would drop below a reserve, e.g. right after a glance reveals a second shooter.
+RACE = True
+RACE_WINDOW, RACE_TTK, RACE_SAFETY, RACE_RESERVE = 2.5, 3., 1.5, .3
 
 
 class Strategy:
@@ -61,6 +66,8 @@ class Strategy:
         self.spoils = []
         self.hit_by = {}
         self.unseen_hits = []
+        self.dealt_log, self.taken_log = [], []
+        self.commit = None
 
     def _remember(self, obs):
         t, me = obs["t"], obs["self"]
@@ -93,6 +100,10 @@ class Strategy:
                     self.swap_time = t
             if typ in ("damaged", "hit"):
                 self.last_contact = t
+            if typ == "hit" and event.get("target") is not None:
+                self.dealt_log.append((t, event["target"], event.get("amount", 0) or 0))
+            elif typ == "damaged":
+                self.taken_log.append((t, event.get("amount", 0) or 0))
             if typ == "damaged" and event.get("weapon") != "zone":
                 self.last_attacked = t
                 by, bearing = event.get("by"), event.get("bearing")
@@ -103,6 +114,28 @@ class Strategy:
                     self.hit_by[event["by"]] = t
                 if event.get("bearing") is not None:
                     self.bearing, self.bearing_time = event["bearing"], t
+
+    def _race(self, obs, visible):
+        """Id of a visible rival we are measurably killing before we fall below reserve, or None."""
+        t, me = obs["t"], obs["self"]
+        self.dealt_log = [h for h in self.dealt_log if t-h[0] <= RACE_WINDOW]
+        self.taken_log = [h for h in self.taken_log if t-h[0] <= RACE_WINDOW]
+        incoming = sum(h[1] for h in self.taken_log) / RACE_WINDOW
+        best = None
+        for c in visible:
+            e = c[4]
+            if not e:
+                continue
+            hits = [h[2] for h in self.dealt_log if h[1] == e["id"]]
+            if len(hits) < 2:
+                continue
+            # Already committed: a little slack so the decision does not flicker.
+            ttk = e.get("hp", 1e9) / max(1e-6, sum(hits)/RACE_WINDOW)
+            limit = RACE_TTK * (1.25 if e["id"] == self.commit else 1.)
+            left = me["hp"] - RACE_SAFETY*incoming*ttk
+            if ttk <= limit and left >= RACE_RESERVE*me["max_hp"] and (best is None or ttk < best[0]):
+                best = (ttk, e["id"])
+        return best and best[1]
 
     def _unseen(self, obs):
         """Bearing of a credible repeated attacker we are not shown, or None."""
@@ -546,6 +579,12 @@ class Strategy:
                       (len(threats)>1 and hp < .7 and pressure > .55))
         aimed = sum(c[0] > .26 for c in threats)
         escape = escape or aimed >= 2
+        commit = self._race(obs, visible) if snowball and RACE else None
+        self.commit = commit
+        if commit is not None and escape:
+            # Finish the rival we are measurably about to kill; the escape
+            # rules apply again the moment the race stops adding up.
+            escape = False
         finishing = None
         if snowball and len(visible) == 1 and visible[0][4] and hp >= .3:
             e = visible[0][4]
@@ -608,6 +647,8 @@ class Strategy:
                 # Prefer finishing a pursuer to spreading damage across the squad.
                 return c[0] + .55*(1-e.get("hp",1000)/max(1,e.get("max_hp",1000))) - distance(p,c[1])*.0008
             focus = max(visible,key=target_score)[4]["id"]
+        if commit is not None:
+            focus = commit
         if contacts and t-self.bearing_time > 1:
             ep = contacts[0][1]
             scan = atan2(ep[1]-p[1], ep[0]-p[0])
