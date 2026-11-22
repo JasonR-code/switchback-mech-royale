@@ -88,5 +88,47 @@ class ShellDrift(unittest.TestCase):
         self.assertEqual(drifting((5., 1., 0.), None, 2.), (5., 1., 0.))
 
 
+class LowProfileRecovery(unittest.TestCase):
+    """While hurt and unharmed for a moment, leave non-engaging rivals alone."""
+    def act(self, hp=700, distance=130, foe_aim=math.pi/2, foe_hp=1400, events=(), **intent):
+        obs = observation('gun', distance=distance, hp=foe_hp)
+        obs['self']['hp'] = hp
+        obs['mechs'][0]['aim'] = [foe_aim, 0]
+        obs['events'] = list(events)
+        return Combat(CFG).act(obs, Flat(), intent)['fire'][0]
+
+    def test_holds_fire_on_distant_rival_looking_away_when_hurt(self):
+        self.assertFalse(self.act())
+
+    def test_fires_when_healthy(self):
+        self.assertTrue(self.act(hp=1300))
+
+    def test_fires_at_rival_aiming_at_us(self):
+        self.assertTrue(self.act(foe_aim=math.pi))
+
+    def test_fires_at_close_rival(self):
+        self.assertTrue(self.act(distance=60))
+
+    def test_finishes_nearly_dead_rival(self):
+        self.assertTrue(self.act(foe_hp=150))
+
+    def test_returns_fire_at_recent_attacker(self):
+        hit = dict(type='damaged', by=1, amount=45, weapon='gun', bearing=0.)
+        self.assertTrue(self.act(events=[hit]))
+
+    def test_not_quiet_while_another_rival_is_hitting_us(self):
+        # Regeneration is already blocked, so no reason to hold fire.
+        hit = dict(type='damaged', by=7, amount=45, weapon='gun', bearing=2.)
+        self.assertTrue(self.act(events=[hit]))
+
+    def test_disabled_by_constant(self):
+        old = combat.LOW_PROFILE_HP
+        try:
+            combat.LOW_PROFILE_HP = 0
+            self.assertTrue(self.act())
+        finally:
+            combat.LOW_PROFILE_HP = old
+
+
 if __name__ == '__main__':
     unittest.main()

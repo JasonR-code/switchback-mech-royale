@@ -63,3 +63,63 @@ python validation/squad_compare.py  base_b.json b.json
 ```
 
 Raw result files are in `validation/results/combat/`.
+
+# Low-profile recovery (branch `claude-recovery`, built on `aa40f9e` = official 4.63)
+
+Practice results so far: `aa40f9e` scored 4.63 twice (the track page says practice seeds are "fixed all event"); `3849ea7` (laser while retreating) scored 4.60 and was not promoted. This branch does **not** contain `3849ea7`.
+
+## Mechanics verified
+
+- **Regeneration** (protocol §7, `defaults.json`): 45 HP/s after 5 s *without dealing or taking damage*, and none outside the zone. Any damage we deal, including to crates and drones, restarts the 5 s delay.
+- **Sound** (§8): a gunshot is heard 320 m away (mortar 420, laser 380, laser charge 140, lightning 160), with a bearing that has 7° of noise. Sounds carry no shooter id.
+- **House bots** (track page): "share vision, never fight each other, and hunt you weakest first (one early, more as you thin them out, all of them late)". Whether they act on sound, or retaliate when shot, is not stated.
+- **Threat observations:** each visible rival's torso `aim`, `charging` flag and `hp`, plus `damaged` events naming the attacker. That is enough to tell who is engaging us.
+
+## Weakness found
+
+The strategy sets `recover` only when hp < 85% **and no enemy is in line of sight**. `cease_fire` is read by combat but never produced. So while we're hurt and nothing is hitting us, any rival in view, even a distant one aiming elsewhere, gets fired on at full weight. So do crates and drones within 45 m. Every hit restarts our regeneration delay, and every shot is audible 320 m away.
+
+## Change (only `combat.py`, inside `Combat.contacts`; no interface change)
+
+The rule applies only while hp < `LOW_PROFILE_HP` (0.6) **and** no `damaged` event has arrived for 1.8 s. While active, it skips a mech that meets all of these:
+- farther than `LOW_PROFILE_RANGE` (90 m);
+- above `LOW_PROFILE_FINISH_HP` (200 HP);
+- not aiming at us (yaw error ≥ 0.28 rad);
+- has not hit us within 3 s.
+
+It also skips non-defensive crates and drones, unless they are the strategy's focus.
+
+Exceptions, all covered by `test_combat_timing.LowProfileRecovery`:
+- immediate threats (aiming at us, attacking us, or within 90 m);
+- nearly dead rivals (≤ 200 HP);
+- any time we're being hit, since regeneration is blocked anyway;
+- defensive drones;
+- the strategy's chosen focus, for crates and drones.
+
+The rule only removes targets, so zone urgency and movement are untouched. `LOW_PROFILE_HP = 0` restores 4.63 behaviour exactly. Timing, mortar and rear-arc code are unchanged.
+
+## Results: new `combat_recovery.py` lab vs unchanged 4.63
+
+Setup: the full `main.Pilot` starts at 30–80% HP after a recent hit. One or two idle rivals are visible at 95–190 m, looking elsewhere. In 75% of cases a hunter arrives from beyond vision range after 6–25 s. Regeneration runs per the rules, vision is limited to 200 m, and each case lasts 40 s.
+
+Fresh split, 300 matched cases:
+
+| Assumption | Deaths | Alive | HP regenerated | Shots | Damage dealt | Kills |
+|---|---|---|---|---|---|---|
+| idle rivals never retaliate | 144 → 128 | +0.7 s [+0.3, +1.1] | +105 [+87, +123] | −6.7 | −154 [−200, −108] | **−0.2 [−0.2, −0.1]** |
+| a rival we shoot starts hunting us | 284 → 275 | +4.1 s [+3.2, +5.0] | +110 [+92, +129] | +0.8 | +34 [−5, +72] | +0.0 |
+
+Dev sweep (200 cases each): HP threshold 0.6 / 0.75 / 0.85 × range 60 / 90 / 130 × finish 200 / 400. Higher HP thresholds buy more survival (up to +2.0 s and 32 fewer deaths) but cost more kills (up to −0.5 per case). Finish 400 changed almost nothing; range 130 was weaker than 60–90. Threshold 0.6 was chosen as the conservative point, losing about half the kills of 0.75.
+
+Pursuit check: the full-pilot squad lab (every rival hunting us), holdout, 320 cases, is **bit-identical** to 4.63. The bot does not become passive while hunted.
+
+## Limitations
+
+- House-bot hearing, shared vision, retaliation and escalation ("more as you thin them out") are not modelled. The two assumptions above bracket retaliation only.
+- There is no cover, map or loot, and the hunter's arrival time is scripted.
+- **Kills are probably a large share of practice points.** House bots never fight each other, so a house bot that dies before us is most likely one we killed. Under the "never retaliate" assumption this rule gives up about 0.2 kills per injured episode. Every major official gain so far came from killing more efficiently. This trade is the main risk.
+- Docker, `sandbox.sh` and real-map tests were not run (unavailable on this host).
+
+## Validation
+
+71 tests pass, except the 3 that need `geometry.so`; the new hold-fire test fails with the rule disabled. Official `check.py`: PASS, 300/300, p99 0.5 ms. Dense timing: p50 1.63 ms (4.63: 1.60), 0 over 50 ms.

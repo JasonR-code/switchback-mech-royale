@@ -208,6 +208,10 @@ def drifting(v, track, flight):
     return (v[0] + trust*(mx-v[0]), v[1] + trust*(my-v[1]), v[2])
 
 
+LOW_PROFILE_HP = .6          # 0 disables the low-profile recovery rule
+LOW_PROFILE_RANGE = 90.
+LOW_PROFILE_FINISH_HP = 200.
+
 REAR_WEIGHT = .25
 REAR_MARGIN = .14
 
@@ -278,6 +282,8 @@ class Combat:
             if event.get('type') == 'damaged' and event.get('by') is not None:
                 self.incoming[event['by']] = now
         attackers = {attacker for attacker,t in self.incoming.items() if now-t < 1.8}
+        quiet = (LOW_PROFILE_HP > 0 and health_ratio < LOW_PROFILE_HP and
+                 now - max(self.incoming.values(), default=-1e9) >= 1.8)
         contacts = []
         for group in ('mechs', 'crates'):
             for obj in obs.get(group, ()):
@@ -303,6 +309,13 @@ class Combat:
                     # can reset our own recovery and attract another member of the squad.
                     if recover and not immediate and hp > 250:
                         continue
+                    # Low profile: while hurt and nobody is hitting us, any damage we
+                    # deal restarts our 5 s regeneration delay and each shot is heard
+                    # 320 m away. Leave rivals that are not engaging us alone, unless
+                    # one is nearly dead.
+                    if (quiet and d > LOW_PROFILE_RANGE and hp > LOW_PROFILE_FINISH_HP
+                            and not aiming_at_us and now - self.incoming.get(oid, -1e9) >= 3.):
+                        continue
                     weight = 1.0 + 48/(30+d) + min(2.2, 260/(65+hp))
                     if aiming_at_us:
                         weight += .55 + .4 * obj.get('charging', False)
@@ -320,6 +333,8 @@ class Combat:
                     height = cfg.get('height', 3.5 if kind == 'npc' else 2.4)
                     defensive = kind == 'npc' and (oid in attackers or d < 28)
                     if not defensive and (retreat or recover or pressure > .72 or intent.get('urgent')):
+                        continue
+                    if quiet and not defensive and oid != focus:
                         continue
                     # Distant boxes reveal us and leave upgrades for other mechs.
                     if d > (80 if oid == focus else 45) and not defensive:
