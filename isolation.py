@@ -35,16 +35,20 @@ class Isolation:
             return None
         # Only class recent hitters or rivals tracking our bearing as secondary attackers.
         hit_now = {e.get("by") for e in obs["events"] if e.get("type") == "damaged"}
-        threats = []
-        for rival in rivals:
-            if rival is primary:
-                continue
+        def engaging(rival):
             ep = rival["pos"]
             angle = math.atan2(pos[1]-ep[1], pos[0]-ep[0])
             recent = rival["id"] in hit_now or t-incoming.get(rival["id"], -100.) < 2.
-            if not recent and math.cos(rival["aim"][0]-angle) < .96:
+            return recent or math.cos(rival["aim"][0]-angle) >= .96
+
+        if not engaging(primary):
+            self.point = None
+            return None
+        threats = []
+        for rival in rivals:
+            if rival is primary or not engaging(rival):
                 continue
-            muzzle = above(ep, 7*(1+.05*rival.get("cubes",0)))
+            muzzle = above(rival["pos"], 7*(1+.05*rival.get("cubes",0)))
             threats.append((rival,muzzle))
         body = above(pos, height*.55)
         def safe(point):

@@ -51,6 +51,12 @@ class IsolationTests(unittest.TestCase):
         self.obs['t']+=1
         self.obs['zone'].update(radius=5,next_radius=5)
         self.assertIsNone(self.pick())
+    def test_only_one_threat_even_when_fighting_a_bystander(self):
+        self.a['aim']=[0,0]
+        self.assertIsNone(self.pick())
+        self.obs['events']=[dict(type='damaged',by=1)]
+        self.assertIsNotNone(self.pick())
+
     def test_unengaged_bystander_and_reported_hit(self):
         self.b['aim']=[math.pi/2,0]
         self.assertIsNone(self.pick())
