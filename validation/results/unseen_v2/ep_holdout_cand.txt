@@ -1,3 +1,0 @@
-cases 120 with-episode 99 episodes 199 (1.66/case) taken4s 217 from-shooter4s 104 kill4s 0.06 died4s 0.15 revealed1.5s 0.72
-cases 120 with-episode 99 episodes 243 (2.02/case) taken4s 138 from-shooter4s 121 kill4s 0.05 died4s 0.09 revealed1.5s 0.63
-cases 120 with-episode 105 episodes 266 (2.22/case) taken4s 137 from-shooter4s 72 kill4s 0.08 died4s 0.05 revealed1.5s 0.77
