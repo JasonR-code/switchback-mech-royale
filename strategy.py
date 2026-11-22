@@ -24,6 +24,17 @@ def future_circle(zone, t, horizon):
     return (c[0] + (n[0]-c[0])*frac, c[1] + (n[1]-c[1])*frac), r + (nr-r)*frac
 
 
+# Snowball policy: take favourable fights closer, finish wounded rivals, chase
+# the ones that break sight, and pick up their cubes. Off once the squad escalates.
+SNOWBALL = True
+FIGHT_RANGE = 75          # off (baseline range); 48 tested: no added kills, slightly worse survival
+ARC_STANDOFF = 75
+FINISH_RANGE = 75
+FINISH_FRAC, FINISH_HP = 0., 0    # off: finish commitment added nothing measurable
+HUNT_FRAC, HUNT_AGE, HUNT_RANGE = -1., 8., 170.   # off: hunting rarely triggered
+SNOWBALL_UNTIL_DEAD, SNOWBALL_UNTIL_T = 8, 300.
+
+
 class Strategy:
     def __init__(self, config, seed):
         self.config = config
@@ -40,6 +51,9 @@ class Strategy:
         self.bearing_time = -1e4
         self.swap_time = -1e4
         self.upgrades = {u["id"]: u for u in config.get("upgrades", [])}
+        self.rivals = {}
+        self.spoils = []
+        self.hit_by = {}
 
     def _remember(self, obs):
         t, me = obs["t"], obs["self"]
@@ -62,6 +76,9 @@ class Strategy:
         for event in obs.get("events", ()):
             typ = event.get("type")
             if typ == "kill":
+                victim = self.rivals.pop(event.get("target"), None)
+                if victim:
+                    self.spoils.append((victim["pos"], t))
                 self.tracks.pop(event.get("target"), None)
             elif typ in ("took", "take_failed") and (typ == "took" or event.get("reason") == "gone"):
                 self.items.pop(event.get("id"), None)
@@ -71,6 +88,8 @@ class Strategy:
                 self.last_contact = t
             if typ == "damaged" and event.get("weapon") != "zone":
                 self.last_attacked = t
+                if event.get("by") is not None:
+                    self.hit_by[event["by"]] = t
                 if event.get("bearing") is not None:
                     self.bearing, self.bearing_time = event["bearing"], t
 
@@ -98,6 +117,8 @@ class Strategy:
             if not los:
                 danger *= .27 if d < 100 else .14
             known.add(enemy["id"])
+            self.rivals[enemy["id"]] = dict(pos=ep, t=t, hp=enemy.get("hp", 1400), max_hp=enemy.get("max_hp", 1400),
+                                            weapons=tuple(enemy.get("weapons", ())), los=los)
             self.tracks[enemy["id"]] = (ep, t, danger, height*.77)
             contacts.append((danger, ep, height*.77, los, enemy))
         for ident, (ep, when, danger, h) in tuple(self.tracks.items()):
@@ -199,7 +220,36 @@ class Strategy:
             act["pick"] = max(range(min(3, len(choices))), key=lambda i: utility(choices[i]))
         return act, slots
 
-    def _select(self, obs, arena, contacts, pressure, values, slots, urgent, escape, recover, center, radius):
+    def _engaging(self, contact, p, t):
+        enemy = contact[4]
+        if not enemy:
+            return True
+        ep = enemy["pos"]
+        facing = cos(enemy.get("aim", (0, 0))[0] - atan2(p[1]-ep[1], p[0]-ep[0]))
+        return facing > .9 or distance(p, ep) < 60 or t - self.hit_by.get(enemy["id"], -1e9) < 3
+
+    def _prey(self, obs, contacts, visible, hp, urgent, escape):
+        """A wounded rival that just broke sight and is worth chasing, or None."""
+        if visible or urgent or escape or hp < .45:
+            return None
+        t, p = obs["t"], obs["self"]["pos"]
+        best = None
+        for ident, r in self.rivals.items():
+            frac = r["hp"]/max(1, r["max_hp"])
+            d = distance(p, r["pos"])
+            if t - r["t"] > HUNT_AGE or frac > HUNT_FRAC or d > HUNT_RANGE or hp - frac < .2:
+                continue
+            # Another remembered rival near the prey would turn the chase into a crossfire.
+            if any(o != ident and q["t"] > t-HUNT_AGE and distance(q["pos"], r["pos"]) < 90
+                   for o, q in self.rivals.items()):
+                continue
+            score = (1-frac) - d/400
+            if best is None or score > best[3]:
+                best = (ident, r["pos"], frac, score)
+        return best
+
+    def _select(self, obs, arena, contacts, pressure, values, slots, urgent, escape, recover, center, radius,
+                snowball=False, prey=None, finishing=None):
         me, t, zone = obs["self"], obs["t"], obs["zone"]
         p, hp, count = me["pos"], me["hp"]/max(1, me["max_hp"]), me.get("cubes", 0)
         speed = max(2, me["stats"].get("walk_speed", 11.7))
@@ -255,6 +305,10 @@ class Strategy:
                         # enemy behind geometry. Legs can strafe independently of the aim.
                         if ep is primary[1]:
                             preferred_range = 33 if has_arc and hp > .72 else 75
+                            if snowball and not (has_arc and hp > .72):
+                                foe = primary[4] or {}
+                                preferred_range = (FINISH_RANGE if finishing == foe.get("id") else
+                                                   ARC_STANDOFF if "lightning" in foe.get("weapons", ()) else FIGHT_RANGE)
                             score -= max(0, abs(near-preferred_range)-22)*.27
                             if category == "anchor" and exposed:
                                 score += 7
@@ -348,6 +402,17 @@ class Strategy:
                 if used == 4:
                     break
 
+        if prey:
+            ident, ep, frac, _ = prey
+            d = distance(p, ep)
+            # Close to gun range of where the rival was last tracked; the server keeps
+            # reporting a tracked mech's true position for memory_s after it leaves view.
+            k = max(0., (d - 30)/max(d, 1e-6))
+            point = (p[0] + (ep[0]-p[0])*k, p[1] + (ep[1]-p[1])*k, ep[2])
+            consider(("hunt", ident), point, 40 + 45*(1-frac), "hunt", ident)
+        if snowball and not escape and not urgent:
+            for sp, when in self.spoils:
+                consider(("spoils", round(when, 1)), sp, 52 - 2*(t-when), "spoils")
         if not recover and not escape and not urgent and count < armor_cap and pressure < .4:
             drones = sorted((m for m in obs.get("mechs", ()) if m.get("kind") == "npc"),
                             key=lambda m: distance(p, m["pos"]))
@@ -437,13 +502,24 @@ class Strategy:
         contacts, pressure = self._perceive(obs, arena)
         hp = me["hp"]/max(1,me["max_hp"])
         visible = [c for c in contacts if c[3]]
+        snowball = (SNOWBALL and t < SNOWBALL_UNTIL_T and
+                    self.config.get("match", {}).get("mechs", 16) - obs.get("alive", 16) < SNOWBALL_UNTIL_DEAD)
+        # Early on the squad sends one hunter at a time; a visible rival looking
+        # elsewhere is not a second firing angle. Count only rivals engaging us.
+        threats = [c for c in visible if self._engaging(c, p, t)] if snowball else visible
         # A lone exposed opponent is a reasonable fight at high HP. Escalate
         # to retreat sooner when a second firing angle or an HP deficit appears.
-        escape = bool((pressure > .82 and (len(visible)>1 or hp<.65)) or
+        escape = bool((pressure > .82 and (len(threats)>1 or hp<.65)) or
                       (hp < .50 and pressure > .26) or
-                      (len(visible)>1 and hp < .7 and pressure > .55))
-        aimed = sum(c[0] > .26 for c in visible)
+                      (len(threats)>1 and hp < .7 and pressure > .55))
+        aimed = sum(c[0] > .26 for c in threats)
         escape = escape or aimed >= 2
+        finishing = None
+        if snowball and len(visible) == 1 and visible[0][4] and hp >= .3:
+            e = visible[0][4]
+            if e.get("hp", 1e9) <= max(FINISH_HP, FINISH_FRAC*e.get("max_hp", 1400)):
+                finishing = e["id"]
+                escape = False
         recover = hp < .85 and not visible
         speed = max(2, me["stats"].get("walk_speed",11.7))
         center, radius = future_circle(zone,t,8)
@@ -456,7 +532,13 @@ class Strategy:
                   (excess > 3 and excess/speed*1.5+5 > available))
         values = self._weapon_values(obs, contacts)
         actions, slots = self._actions(obs, values, pressure)
-        flags = (escape, recover, urgent, len(visible)>1, tuple(s and s["kind"] for s in slots))
+        prey = self._prey(obs, contacts, visible, hp, urgent, escape) if snowball else None
+        if prey:
+            # Chasing a clearly weaker rival replaces waiting out of sight to regenerate.
+            recover = False
+        self.spoils = [(sp, when) for sp, when in self.spoils if t-when < 15 and distance(sp, p) > 5]
+        flags = (escape, recover, urgent, len(visible)>1, tuple(s and s["kind"] for s in slots),
+                 prey and prey[0], finishing, len(self.spoils))
         invalid = False
         if self.last_goal:
             key, _, category, _, _ = self.last_goal
@@ -466,7 +548,8 @@ class Strategy:
                 invalid = not any(m["id"] == key for m in obs.get("mechs", ()))
         if t >= self.next_plan or flags != self.last_flags or invalid or not self.last_goal:
             self.last_goal = self._select(obs, arena, contacts, pressure, values, slots,
-                                          urgent, escape, recover, center, radius)
+                                          urgent, escape, recover, center, radius,
+                                          snowball=snowball, prey=prey, finishing=finishing)
             # Keep an existing route into shelter, including routes around corners.
             # Redirect exposed anchors that leave the mech in the squad's firing lanes.
             if escape and len(visible) >= 2 and not (zone["radius"] < 20 and urgent):
