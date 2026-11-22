@@ -2,6 +2,8 @@
 from dataclasses import dataclass
 from math import atan2, ceil, cos, dist, hypot, pi, radians, sin, sqrt
 
+from gun_tracking import GunTrack
+
 
 ZERO = (0.0, 0.0, 0.0)
 
@@ -146,6 +148,7 @@ class Contact:
     height: float
     distance: float
     weight: float
+    gun_velocity: tuple = None
 
 
 @dataclass(slots=True)
@@ -168,6 +171,7 @@ class Combat:
         self.step = 1 / max(1, match.get('tick_hz', 20))
         self.interval = self.step * match.get('decide_every', 2)
         self.previous = {}
+        self.gun_tracks = {}
         self.incoming = {}
         self.focus = None
 
@@ -179,6 +183,8 @@ class Combat:
         retreat = intent.get('escape', False)
         health_ratio = me.get('hp', 1400) / max(1., me.get('max_hp', 1400))
         now = obs.get('t', 0.)
+        gun = next((w for w in me.get('weapons', ()) if w and w.get('kind') == 'gun'), None)
+        gun_stats = self.weapons.get('gun', {}) | ((gun or {}).get('stats') or {})
         for event in obs.get('events', ()):
             if event.get('type') == 'damaged' and event.get('by') is not None:
                 self.incoming[event['by']] = now
@@ -254,7 +260,15 @@ class Combat:
                     forecast = v
                 if kind != 'crate':
                     self.previous[oid] = (now, v)
-                contacts.append(Contact(obj, kind, center, forecast, radius, height, d, weight))
+                gun_velocity = None
+                if gun and kind == 'mech' and 1 < d <= gun_stats.get('range', 230) + radius:
+                    track = self.gun_tracks.get(oid)
+                    if track is None:
+                        track = self.gun_tracks[oid] = GunTrack()
+                    bearing = (p[0]-origin[0])/d, (p[1]-origin[1])/d
+                    horizon = clamp(d/max(1.,gun_stats.get('speed', 252)), .14, .88)
+                    gun_velocity = track.step(now, p, v, forecast, horizon, bearing)
+                contacts.append(Contact(obj, kind, center, forecast, radius, height, d, weight, gun_velocity))
         contacts.sort(key=lambda c: c.weight, reverse=True)
         return contacts
 
@@ -334,7 +348,7 @@ class Combat:
                         continue
                 windows = None
                 # Aim half a physics tick ahead for discrete movement/fire ordering.
-                vx, vy, vz = target.velocity
+                vx, vy, vz = target.gun_velocity if kind == 'gun' and target.gun_velocity else target.velocity
                 origin = tube if kind == 'mortar' else muzzle
                 delay = self.step * .5
                 dx = c[0] + vx*delay - origin[0]
