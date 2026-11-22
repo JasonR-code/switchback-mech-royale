@@ -1,6 +1,7 @@
 """Shared-torso fire control for the four mechfight weapons."""
+from collections import deque
 from dataclasses import dataclass
-from math import atan2, ceil, cos, dist, hypot, pi, radians, sin, sqrt
+from math import atan2, ceil, cos, dist, exp, hypot, pi, radians, sin, sqrt
 
 from gun_tracking import GunTrack
 
@@ -138,6 +139,92 @@ def lightning_windows(yaw, distance, cone, obstacles):
     return [(wrap(yaw + .5*(a+b)), (b-a)*.5) for a,b in windows if b-a > .012]
 
 
+MORTAR_TAU = .6
+DRIFT_TAU = 2.
+
+
+def damped(v, drift, horizon):
+    """Mean velocity over a horizon when the deviation from drift decays at MORTAR_TAU."""
+    if MORTAR_TAU <= 0 or horizon <= 1e-6:
+        return v[0], v[1]
+    k = MORTAR_TAU*(1 - exp(-horizon/MORTAR_TAU))/horizon
+    return drift[0] + (v[0]-drift[0])*k, drift[1] + (v[1]-drift[1])*k
+
+
+class DriftTrack:
+    """Choose between straight-line and mean-reverting forecasts at shell horizons.
+
+    Each observation scores both forecasts made 1 s and 2 s earlier against the
+    displacement that actually happened. drift() then returns how much to trust
+    the mean-reverting forecast (0 with no evidence, so new rivals keep the
+    straight-line lead).
+    """
+    HORIZONS = (1., 2.)
+
+    def __init__(self):
+        self.history = deque(maxlen=48)
+        self.errors = {h: [0., 0.] for h in self.HORIZONS}
+        self.weight = {h: 0. for h in self.HORIZONS}
+        self.mean = None
+
+    def step(self, now, pos, v):
+        if self.history and not 0 < now-self.history[-1][0] < .6:
+            self.__init__()
+        dt = now-self.history[-1][0] if self.history else .1
+        if self.mean is None:
+            self.mean = (v[0], v[1])
+        blend = 1 - exp(-dt/DRIFT_TAU)
+        self.mean = (self.mean[0] + blend*(v[0]-self.mean[0]), self.mean[1] + blend*(v[1]-self.mean[1]))
+        for h in self.HORIZONS:
+            then = min(self.history, key=lambda s: abs(now-s[0]-h), default=None)
+            if then is None or abs(now-then[0]-h) > .06:
+                continue
+            ax, ay = pos[0]-then[1][0], pos[1]-then[1][1]
+            linear = then[2]
+            mean = damped(then[2], then[3], h)
+            decay = exp(-dt/4.)
+            self.weight[h] = decay*self.weight[h] + 1
+            for i, (fx, fy) in enumerate((linear, mean)):
+                miss = (fx*h-ax)**2 + (fy*h-ay)**2
+                self.errors[h][i] = decay*self.errors[h][i] + min(miss, 400.)
+        self.history.append((now, (pos[0], pos[1]), (v[0], v[1]), self.mean))
+
+    def drift(self, horizon):
+        h = min(self.HORIZONS, key=lambda x: abs(x-horizon))
+        if self.weight[h] < 4:
+            return 0.
+        linear, mean = self.errors[h]
+        return clamp((linear-mean)/max(1e-6, linear+mean)*2, 0., 1.)
+
+
+def drifting(v, track, flight):
+    """Expected mean velocity of a rival over a shell flight."""
+    if track is None or flight <= 1e-6 or MORTAR_TAU <= 0 or track.mean is None:
+        return v
+    trust = track.drift(flight)
+    if trust <= 0:
+        return v
+    mx, my = damped(v, track.mean, flight)
+    return (v[0] + trust*(mx-v[0]), v[1] + trust*(my-v[1]), v[2])
+
+
+REAR_WEIGHT = .25
+REAR_MARGIN = .14
+
+
+def rear_exposure(threats, yaw):
+    """Danger from rivals that would sit outside our front arc at this torso yaw.
+
+    Hits from outside the 180-degree front arc deal rear_mult (1.5x) damage.
+    The margin covers torso slew and rival motion during the aim.
+    """
+    total = 0.
+    for bearing, level, half_arc in threats:
+        if abs(wrap(bearing - yaw)) > half_arc - REAR_MARGIN:
+            total += level
+    return total
+
+
 @dataclass(slots=True)
 class Contact:
     obj: dict
@@ -149,6 +236,7 @@ class Contact:
     distance: float
     weight: float
     gun_velocity: tuple = None
+    drift: object = None
 
 
 @dataclass(slots=True)
@@ -171,6 +259,7 @@ class Combat:
         self.step = 1 / max(1, match.get('tick_hz', 20))
         self.interval = self.step * match.get('decide_every', 2)
         self.previous = {}
+        self.drifts = {}
         self.gun_tracks = {}
         self.incoming = {}
         self.focus = None
@@ -268,9 +357,66 @@ class Combat:
                     bearing = (p[0]-origin[0])/d, (p[1]-origin[1])/d
                     horizon = clamp(d/max(1.,gun_stats.get('speed', 252)), .14, .88)
                     gun_velocity = track.step(now, p, v, forecast, horizon, bearing)
-                contacts.append(Contact(obj, kind, center, forecast, radius, height, d, weight, gun_velocity))
+                drift = None
+                if kind != 'crate':
+                    drift = self.drifts.get(oid)
+                    if drift is None:
+                        drift = self.drifts[oid] = DriftTrack()
+                    drift.step(now, p, v)
+                contacts.append(Contact(obj, kind, center, forecast, radius, height, d, weight, gun_velocity, drift))
         contacts.sort(key=lambda c: c.weight, reverse=True)
         return contacts
+
+    def threats(self, obs, arena, contacts, muzzle):
+        """(bearing, danger, front half-arc) for rivals able to hit us soon.
+
+        Danger is roughly relative incoming damage rate: 1 for a mech that is
+        aiming at us or recently hit us, more for a charging laser or close
+        lightning, less for idle, distant, occluded rivals and drones.
+        """
+        me = obs.get('self') or {}
+        body = self.base | (me.get('stats') or {})
+        rear_mult = body.get('rear_mult', 1.5)
+        if rear_mult <= 1:
+            return []
+        half_arc = radians(body.get('front_arc_deg', 180))*.5
+        scale = (rear_mult - 1)/.5
+        now = obs.get('t', 0.)
+        pos = me.get('pos') or ZERO
+        center = (pos[0], pos[1], pos[2] + .5*body.get('height', 9))
+        reach = {k: self.weapons.get(k, {}).get('range', 0) for k in ('gun', 'laser', 'lightning')}
+        reach['mortar'] = 235.
+        result = []
+        # Bound the line-of-sight casts in crowded scenes to the nearest rivals.
+        nearby = sorted((m for m in obs.get('mechs', ()) if m.get('pos') and len(m['pos']) >= 3),
+                        key=lambda m: hypot(m['pos'][0]-pos[0], m['pos'][1]-pos[1]))[:8]
+        for m in nearby:
+            p = m['pos']
+            dx, dy = p[0]-pos[0], p[1]-pos[1]
+            d = hypot(dx, dy)
+            if d < .5:
+                continue
+            bearing = atan2(dy, dx)
+            attacker = now - self.incoming.get(m.get('id'), -1e9) < 2.5
+            if m.get('kind') == 'npc':
+                if not (attacker or d < 45):
+                    continue
+                level, eye = .3, 2.5
+            else:
+                weapons = m.get('weapons') or ['gun']
+                if d > max(reach.get(w, 0) for w in weapons) + 10:
+                    continue
+                error = abs(wrap((m.get('aim') or ZERO)[0] - (bearing + pi)))
+                level = 1. if attacker or error < .35 else (.45 if d < 70 else .2)
+                if 'laser' in weapons:
+                    level *= 2.2 if m.get('charging') and error < .35 else 1.3
+                if 'lightning' in weapons and d < 50:
+                    level *= 1.5
+                eye = body.get('muzzle_height', 7)
+            if not arena.clear((p[0], p[1], p[2] + eye), center):
+                level *= .25
+            result.append((bearing, level*scale, half_arc))
+        return result
 
     def act(self, obs, arena, intent):
         me = obs.get('self') or {}
@@ -286,6 +432,7 @@ class Combat:
         inventory = list((me.get('weapons') or [])[:2])
         inventory += [None] * (2-len(inventory))
         contacts = self.contacts(obs, intent, muzzle)
+        own_v = tuple(me.get('vel') or ZERO)
         now = obs.get('t', 0.)
         protected = intent.get('recover') or intent.get('cease_fire') or (
             intent.get('escape') and me.get('hp', 1400) < .7*me.get('max_hp',1400))
@@ -322,6 +469,7 @@ class Combat:
                 if abs(wrap(facing-bearing)) < radians(arc_stats.get('cone_deg',30))+ .36 and arena.clear(target.center,muzzle):
                     arc_risk = True
                     break
+        threats = self.threats(obs, arena, contacts, muzzle)
         shots = []
         stats_by_slot = []
         for slot, w in enumerate(inventory):
@@ -347,10 +495,18 @@ class Combat:
                     if target.kind != 'mech' or target.obj.get('hp', 1400) > stats.get('splash',160):
                         continue
                 windows = None
-                # Aim half a physics tick ahead for discrete movement/fire ordering.
                 vx, vy, vz = target.gun_velocity if kind == 'gun' and target.gun_velocity else target.velocity
-                origin = tube if kind == 'mortar' else muzzle
-                delay = self.step * .5
+                # Within a tick the server moves every mech, then fires from the
+                # post-move muzzle, and a new projectile also flies that tick
+                # (measured on the public recording). A weapon that is ready
+                # now fires on tick 1; one with up to a tick of cooldown left
+                # fires on tick 2. Bullets and shells behave as if launched one
+                # tick before they spawn; beams strike at the spawn tick.
+                fire_tick = 1 if kind == 'laser' or cooldown <= self.step + 1e-6 else 2
+                delay = self.step * (fire_tick if kind in ('laser', 'lightning') else fire_tick - 1)
+                shift = self.step * fire_tick
+                base = tube if kind == 'mortar' else muzzle
+                origin = (base[0] + own_v[0]*shift, base[1] + own_v[1]*shift, base[2] + own_v[2]*shift)
                 dx = c[0] + vx*delay - origin[0]
                 dy = c[1] + vy*delay - origin[1]
                 dz = c[2] + vz*delay - origin[2]
@@ -371,13 +527,23 @@ class Combat:
                     options = mortar_solutions((dx, dy, dz), v, speed, gravity, barrel, ttl)
                     picked = None
                     for sol in options:
+                        # Over a multi-second flight a strafing or jinking rival
+                        # does not keep its current velocity. Expect its long-run
+                        # drift plus a decaying share of the present velocity,
+                        # then re-solve once for the root with a similar flight.
+                        effective = drifting(v, target.drift, sol[2])
+                        if effective is not v:
+                            refined = mortar_solutions((dx, dy, dz), effective, speed, gravity, barrel, ttl)
+                            if not refined:
+                                continue
+                            sol = min(refined, key=lambda s, f=sol[2]: abs(s[2]-f))
                         yaw, pitch, flight = sol
                         if not pitch_limits[0] <= pitch <= pitch_limits[1]:
                             continue
                         # Compare predicted locations at the impact tick too.
-                        own_v = me.get('vel') or ZERO
-                        separation = hypot(dx + vx*flight-own_v[0]*min(flight,.55),
-                                           dy + vy*flight-own_v[1]*min(flight,.55))
+                        ex, ey = (effective[0], effective[1])
+                        separation = hypot(dx + ex*flight-own_v[0]*min(flight,.55),
+                                           dy + ey*flight-own_v[1]*min(flight,.55))
                         if separation < splash + barrel + 2:
                             continue
                         if arc_clear(arena, tube, sol, speed, gravity, barrel):
@@ -456,6 +622,7 @@ class Combat:
                     value *= .12 if cooldown > .35 else .38
                 yaw_delay = abs(wrap(yaw-actual[0]))/max(.1,yaw_rate)
                 value /= 1 + .42*yaw_delay
+                value /= 1 + REAR_WEIGHT*rear_exposure(threats, yaw)
                 for center_yaw, tolerance in windows or [(yaw, yaw_tolerance)]:
                     shots.append(Shot(slot, target, center_yaw, clamp(pitch,*pitch_limits), tolerance, pitch_tolerance, value))
                 count += 1
