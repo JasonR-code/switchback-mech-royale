@@ -33,6 +33,9 @@ FINISH_RANGE = 75
 FINISH_FRAC, FINISH_HP = 0., 0    # off: finish commitment added nothing measurable
 HUNT_FRAC, HUNT_AGE, HUNT_RANGE = -1., 8., 170.   # off: hunting rarely triggered
 SNOWBALL_UNTIL_DEAD, SNOWBALL_UNTIL_T = 8, 300.
+# Duel hold: with exactly one rival engaging us, a retreat does not regenerate (it pursues),
+# so keep fighting while that rival has no more HP left than we do. 0 disables.
+DUEL_EDGE, DUEL_FLOOR = 1., .35
 
 
 class Strategy:
@@ -514,6 +517,11 @@ class Strategy:
                       (len(threats)>1 and hp < .7 and pressure > .55))
         aimed = sum(c[0] > .26 for c in threats)
         escape = escape or aimed >= 2
+        if snowball and DUEL_EDGE > 0 and escape and len(threats) == 1 and threats[0][4] and hp >= DUEL_FLOOR:
+            # One engaging rival, nobody else turning on us: a retreat from a pursuer
+            # cannot regenerate, so hold the fight while it has no more HP left than us.
+            if threats[0][4].get("hp", 1e9) <= DUEL_EDGE*me["hp"]:
+                escape = False
         finishing = None
         if snowball and len(visible) == 1 and visible[0][4] and hp >= .3:
             e = visible[0][4]
