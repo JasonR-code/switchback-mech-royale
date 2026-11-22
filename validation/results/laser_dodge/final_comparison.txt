@@ -1,0 +1,74 @@
+### map holdout s.5
+cases 100  deaths base 39 cand 35
+  kills (=outlasted) base     2.33 cand     2.52 diff    +0.19 [-0.04, +0.42]
+  alive s            base    92.56 cand    97.62 diff    +5.05 [-0.73, +10.65]
+  death<60           base     0.27 cand     0.19 diff    -0.08 [-0.15, -0.01]
+  died               base     0.39 cand     0.35 diff    -0.04 [-0.12, +0.05]
+  rear               base   184.95 cand   193.73 diff    +8.78 [-27.67, +44.22]
+  unseen taken       base   143.55 cand   163.01 diff   +19.46 [-9.11, +50.51]
+### map holdout s.5np
+cases 100  deaths base 6 cand 7
+  kills (=outlasted) base     2.99 cand     3.12 diff    +0.13 [-0.05, +0.32]
+  alive s            base   116.01 cand   116.91 diff    +0.90 [-1.93, +4.26]
+  death<60           base     0.04 cand     0.00 diff    -0.04 [-0.08, -0.01]
+  died               base     0.06 cand     0.07 diff    +0.01 [-0.04, +0.06]
+  rear               base   109.69 cand   135.01 diff   +25.32 [-0.33, +54.34]
+  unseen taken       base   154.46 cand   166.95 diff   +12.49 [-16.20, +41.39]
+### map holdout s1
+cases 100  deaths base 71 cand 67
+  kills (=outlasted) base     1.19 cand     1.28 diff    +0.09 [-0.04, +0.22]
+  alive s            base    61.96 cand    68.02 diff    +6.05 [+2.28, +10.22]
+  death<60           base     0.54 cand     0.49 diff    -0.05 [-0.11, +0.01]
+  died               base     0.71 cand     0.67 diff    -0.04 [-0.10, +0.01]
+  rear               base   227.47 cand   213.30 diff   -14.18 [-52.65, +24.30]
+  unseen taken       base   194.62 cand   184.28 diff   -10.35 [-50.17, +27.90]
+### map fresh s.5
+cases 100  deaths base 30 cand 21
+  kills (=outlasted) base     2.40 cand     2.68 diff    +0.28 [+0.04, +0.53]
+  alive s            base   100.54 cand   107.92 diff    +7.38 [+2.05, +13.02]
+  death<60           base     0.18 cand     0.09 diff    -0.09 [-0.16, -0.02]
+  died               base     0.30 cand     0.21 diff    -0.09 [-0.17, -0.01]
+  rear               base   157.95 cand   146.82 diff   -11.13 [-46.24, +22.62]
+  unseen taken       base   138.94 cand   142.65 diff    +3.71 [-20.48, +28.00]
+### map fresh s.5np
+cases 100  deaths base 8 cand 2
+  kills (=outlasted) base     2.97 cand     3.17 diff    +0.20 [+0.00, +0.41]
+  alive s            base   116.50 cand   119.19 diff    +2.68 [-0.09, +5.89]
+  death<60           base     0.04 cand     0.00 diff    -0.04 [-0.08, -0.01]
+  died               base     0.08 cand     0.02 diff    -0.06 [-0.12, -0.01]
+  rear               base   123.19 cand   116.10 diff    -7.08 [-31.72, +18.90]
+  unseen taken       base   137.92 cand   153.90 diff   +15.97 [-15.75, +49.84]
+### map fresh s1
+cases 100  deaths base 68 cand 61
+  kills (=outlasted) base     1.41 cand     1.52 diff    +0.11 [-0.04, +0.27]
+  alive s            base    65.64 cand    73.59 diff    +7.95 [+2.49, +13.67]
+  death<60           base     0.51 cand     0.41 diff    -0.10 [-0.17, -0.04]
+  died               base     0.68 cand     0.61 diff    -0.07 [-0.15, +0.00]
+  rear               base   163.35 cand   196.43 diff   +33.08 [-4.72, +72.90]
+  unseen taken       base   137.93 cand   171.90 diff   +33.98 [+2.92, +66.38]
+### map holdout OLD laser
+cases 100  deaths base 38 cand 30
+  kills (=outlasted) base     2.45 cand     2.60 diff    +0.15 [-0.08, +0.39]
+  alive s            base    95.94 cand    98.06 diff    +2.13 [-3.83, +8.05]
+  death<60           base     0.21 cand     0.20 diff    -0.01 [-0.08, +0.06]
+  died               base     0.38 cand     0.30 diff    -0.08 [-0.16, +0.01]
+### open holdout
+  kills         base     1.38 cand     1.75 diff    +0.37 [+0.24, +0.50]
+  alive         base    43.32 cand    54.86 diff   +11.54 [+8.77, +14.48]
+  death<60      base     0.79 cand     0.64 diff    -0.16 [-0.22, -0.09]
+  rear          base   182.88 cand   204.40 diff   +21.51 [+0.21, +43.03]
+### squad
+dealt  base    210550 cand    212034 mean diff     +4.6 95% CI [-5.8, +15.0] better 73 worse 51
+taken  base    473242 cand    473175 mean diff     -0.2 95% CI [-11.1, +11.0] better 84 worse 81
+rear   base     81202 cand     79515 mean diff     -5.3 95% CI [-14.8, +4.0] better 43 worse 35
+kills  base         8 cand         9 mean diff     +0.0 95% CI [+0.0, +0.0] better 1 worse 0
+net (dealt-taken) mean diff +4.8 95% CI [-10.3, +19.6]
+alive time mean diff -0.04s 95% CI [-0.17, +0.08]  deaths base 300 cand 303  longer 66 shorter 58
+laser hit rate holdout s.5 base 282/331=85% | cand2 201/356=56%
+laser hit rate holdout s.5np base 244/308=79% | cand2 165/309=53%
+laser hit rate holdout s1 base 154/184=84% | cand2 108/210=51%
+laser hit rate fresh s.5 base 308/400=77% | cand2 207/451=46%
+laser hit rate fresh s.5np base 217/290=75% | cand2 155/332=47%
+laser hit rate fresh s1 base 157/204=77% | cand2 130/249=52%
+
+[exited with code 0]

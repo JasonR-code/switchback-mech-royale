@@ -24,17 +24,23 @@ import random
 import sys
 from pathlib import Path
 
-from combat_lab import DT, wrap
+from combat_lab import DT, ray_cylinder, wrap
 from combat_squad import Rival, Squad
 
 TIERS = {'easy': (.06, .3, .1), 'medium': (.035, .55, .3), 'hard': (.02, .8, .5), 'expert': (.01, .95, .7)}
 
 
 class Snowball(Squad):
-    def __init__(self, Combat, cfg, seed, pilot, duration=120., scale=1., provoke=True, fov=False):
+    def __init__(self, Combat, cfg, seed, pilot, duration=120., scale=1., provoke=True, fov=False, house_laser=False):
         super().__init__(Combat, cfg, seed, 'still', duration=duration, pilot=pilot)
         # fov: protocol section 8 vision (120 deg wedge on our aim, 45 m proximity, 5 s tracking memory).
         self.fov, self.seen_t = fov, {}
+        self.los = None   # optional sight test (eye, target) for the map lab
+        # house_laser: rival lasers as fitted to the public recording (see laser_fit in COVER notes):
+        # while charging, aim at our position one observation earlier + 0.3 s of our velocity,
+        # release 0.80-0.95 s after the charge starts whatever the alignment.
+        self.house_laser, self.hist = house_laser, []
+        self.stats.update(laser_fired=0, laser_hit=0)
         self.hidden_dmg, self.hidden_events = 0., []
         rng = random.Random(seed*17 + 3)
         self.scale, self.provoke = scale, provoke
@@ -71,6 +77,9 @@ class Snowball(Squad):
             self.band[r.id] = (45., 95.)
 
     def observation(self, tick):
+        self.hist.append((self.t, list(self.me.pos), list(self.me.vel)))
+        if len(self.hist) > 8:
+            self.hist.pop(0)
         obs = super().observation(tick)
         me = self.me.pos
         obs['mechs'] = [m for m in obs['mechs'] if math.hypot(m['pos'][0]-me[0], m['pos'][1]-me[1]) <= 200]
@@ -82,7 +91,7 @@ class Snowball(Squad):
             for m in obs['mechs']:
                 d = math.hypot(m['pos'][0]-me[0], m['pos'][1]-me[1])
                 yaw = math.atan2(m['pos'][1]-me[1], m['pos'][0]-me[0])
-                if d <= near or abs(wrap(yaw - self.aim[0])) <= half:
+                if (d <= near or abs(wrap(yaw - self.aim[0])) <= half) and (self.los is None or self.los(me, m['pos'])):
                     self.seen_t[m['id']] = self.t
                 if self.t - self.seen_t.get(m['id'], -1e9) <= memory:
                     kept.append(m)
@@ -133,7 +142,38 @@ class Snowball(Squad):
             r.role = 'withdrawn'
             self.band[r.id] = (240., 270.)
             return
+        if not (self.house_laser and r.laser):
+            super().rival_tick(r)
+            return
+        L, r.laser = r.laser, None
+        if L['charge'] > 0:
+            r.gun['cooldown'] = max(r.gun['cooldown'], 2*DT)
         super().rival_tick(r)
+        r.laser = L
+        if self.t < r.wake:
+            return
+        laser = self.cfg['weapons']['laser']
+        p = self.me.pos
+        x, y, _ = r.body.pos
+        d = math.hypot(p[0]-x, p[1]-y)
+        L['cooldown'] = max(0., L['cooldown']-DT)
+        if L['charge'] <= 0:
+            if L['cooldown'] > 1e-9 or d > laser['range'] or abs(wrap(r.aim[0] - math.atan2(p[1]-y, p[0]-x))) > .1:
+                return
+            L['goal'] = laser['charge'] + self.rng.uniform(.05, .2)
+        L['charge'] += DT
+        past = [h for h in self.hist if h[0] <= self.t - .1 + 1e-6]
+        _, hp, hv = past[-1] if past else self.hist[0]
+        tx, ty = hp[0] + .3*hv[0], hp[1] + .3*hv[1]
+        r.aim[0] = math.atan2(ty-y, tx-x) + self.rng.gauss(0, .002)
+        r.aim[1] = math.atan2(4.5-7, d)
+        if L['charge'] >= L['goal']:
+            self.stats['laser_fired'] += 1
+            amount = laser['damage']*(laser['min_frac'] + (1-laser['min_frac'])*min(1., L['charge']/laser['charge']))
+            if ray_cylinder((x, y, 7.), self.direction(r.aim), laser['range'], self.me.pos, 2.5, 9) is not None:
+                self.stats['laser_hit'] += 1
+                self.hurt_me(r, amount, 'laser', (x, y, 7.))
+            L['charge'], L['cooldown'] = 0., laser['cooldown']
 
     def tick(self, action, first):
         before = list(self.me.pos)
@@ -196,6 +236,7 @@ def main():
     p.add_argument('--rival-damage', type=float, default=1., help='scale on damage rivals deal (stand-in for cover)')
     p.add_argument('--no-provoke', action='store_true', help='rivals we shoot do not start hunting')
     p.add_argument('--fov', action='store_true', help='protocol vision: 120 deg wedge, 45 m proximity, 5 s memory')
+    p.add_argument('--house-laser', action='store_true', help='rival lasers use the aim/release model fitted to the recording')
     a = p.parse_args()
     sys.path.insert(0, str(a.bot_dir.resolve()))
     from combat import Combat
@@ -205,7 +246,8 @@ def main():
     for seed in cases(a.split, a.cases):
         pilot = Pilot(dict(type='hello', slot=0, seed=seed, config=cfg, map=dict(dir=str(a.bot_dir/'no-map'))))
         row = dict(seed=seed)
-        row.update(Snowball(Combat, cfg, seed, pilot, scale=a.rival_damage, provoke=not a.no_provoke, fov=a.fov).run())
+        row.update(Snowball(Combat, cfg, seed, pilot, scale=a.rival_damage, provoke=not a.no_provoke, fov=a.fov,
+                             house_laser=a.house_laser).run())
         out.append(row)
     if a.json:
         a.json.write_text(json.dumps(out))
